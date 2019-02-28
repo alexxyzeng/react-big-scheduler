@@ -19,8 +19,14 @@ class Basic extends Component {
     super(props);
 
     //let schedulerData = new SchedulerData(new moment("2017-12-18").format(DATE_FORMAT), ViewTypes.Week);
-    let schedulerData = new SchedulerData('2017-12-18', ViewTypes.Day);
-    schedulerData.localeMoment.locale('en');
+    let schedulerData = new SchedulerData(
+      '2017-12-18',
+      ViewTypes.Day,
+      false,
+      false,
+      { checkConflict: true }
+    );
+    schedulerData.localeMoment.locale('cnb');
     schedulerData.setResources(DemoData.resources);
     schedulerData.setEvents(DemoData.events);
     this.state = {
@@ -57,6 +63,7 @@ class Basic extends Component {
             onScrollRight={this.onScrollRight}
             onScrollTop={this.onScrollTop}
             onScrollBottom={this.onScrollBottom}
+            slotClickedFunc={this.onSlotClicked}
           />
         </div>
         <Tips />
@@ -135,11 +142,11 @@ class Basic extends Component {
 
       let newEvent = {
         id: newFreshId,
-        title: 'New event you just created',
+        title: 'New event ',
         start: start,
         end: end,
         resourceId: slotId,
-        bgColor: 'purple'
+        bgColor: '#31C58D'
       };
       schedulerData.addEvent(newEvent);
       this.setState({
@@ -149,6 +156,7 @@ class Basic extends Component {
   };
 
   updateEventStart = (schedulerData, event, newStart) => {
+    console.log('update event start');
     if (
       confirm(
         `Do you want to adjust the start of the event? {eventId: ${
@@ -176,6 +184,8 @@ class Basic extends Component {
     this.setState({
       viewModel: schedulerData
     });
+    console.log('update event end');
+    //  计算偏移值
   };
 
   moveEvent = (schedulerData, event, slotId, slotName, start, end) => {

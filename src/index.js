@@ -98,30 +98,46 @@ class Scheduler extends Component {
   };
 
   static propTypes = {
+    //  列表数据
     schedulerData: PropTypes.object.isRequired,
+    //  前一天
     prevClick: PropTypes.func.isRequired,
+    //  后一天
     nextClick: PropTypes.func.isRequired,
+    //  切换视图模型
     onViewChange: PropTypes.func.isRequired,
+    //  选择日期
     onSelectDate: PropTypes.func.isRequired,
     onSetAddMoreState: PropTypes.func,
+    //  更新会议开始时间
     updateEventStart: PropTypes.func,
+    //  更新会议结束时间
     updateEventEnd: PropTypes.func,
+    //  移动会议
     moveEvent: PropTypes.func,
+    //  自定义左侧头部
     leftCustomHeader: PropTypes.object,
+    //  自定义右侧头部
     rightCustomHeader: PropTypes.object,
+    //  新建会议
     newEvent: PropTypes.func,
     subtitleGetter: PropTypes.func,
+    //  会议点击事件
     eventItemClick: PropTypes.func,
+    //  点击popover的文字和事件
     viewEventClick: PropTypes.func,
     viewEventText: PropTypes.string,
     viewEvent2Click: PropTypes.func,
     viewEvent2Text: PropTypes.string,
+    //  冲突检查
     conflictOccurred: PropTypes.func,
+    //  自定义事件模板
     eventItemTemplateResolver: PropTypes.func,
     dndSources: PropTypes.array,
     slotClickedFunc: PropTypes.func,
     slotItemTemplateResolver: PropTypes.func,
     nonAgendaCellHeaderTemplateResolver: PropTypes.func,
+    //  各个方向的滚动事件
     onScrollLeft: PropTypes.func,
     onScrollRight: PropTypes.func,
     onScrollTop: PropTypes.func,
@@ -177,10 +193,10 @@ class Scheduler extends Component {
       config
     } = schedulerData;
     const width = schedulerData.getSchedulerWidth();
-    console.log(width, '--- width');
     const calendarPopoverEnabled = config.calendarPopoverEnabled;
-
+    //  设置时间标签
     let dateLabel = schedulerData.getDateLabel();
+    //  设置时间切换按钮
     let defaultValue = `${viewType}${showAgenda ? 1 : 0}${
       isEventPerspective ? 1 : 0
     }`;
@@ -203,13 +219,13 @@ class Scheduler extends Component {
     if (showAgenda) {
       tbodyContent = <AgendaView {...this.props} />;
     } else {
+      //  左侧导航信息列表
       //   let resourceTableWidth = schedulerData.getResourceTableWidth();
       let resourceTableWidth = 320;
       let schedulerContainerWidth = width - resourceTableWidth + 1;
       let schedulerWidth = schedulerData.getContentTableWidth() - 1;
       let DndResourceEvents = this.state.dndContext.getDropTarget();
       let eventDndSource = this.state.dndContext.getDndSource();
-
       let resourceEventsList = renderData.map(item => {
         return (
           <DndResourceEvents
@@ -252,7 +268,6 @@ class Scheduler extends Component {
           maxHeight: config.schedulerMaxHeight - config.tableHeaderHeight
         };
       }
-
       let resourceName = schedulerData.isEventPerspective
         ? config.taskName
         : config.resourceName;

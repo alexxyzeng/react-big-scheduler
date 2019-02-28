@@ -48,8 +48,8 @@ export default {
   endResizable: true,
   movable: true,
   creatable: true,
-  crossResourceMove: true,
-  checkConflict: false,
+  crossResourceMove: false,
+  checkConflict: true,
   scrollToSpecialMomentEnabled: true,
   eventItemPopoverEnabled: true,
   calendarPopoverEnabled: true,
@@ -86,18 +86,18 @@ export default {
       viewType: ViewTypes.Month,
       showAgenda: false,
       isEventPerspective: false
-    },
-    {
-      viewName: 'Quarter',
-      viewType: ViewTypes.Quarter,
-      showAgenda: false,
-      isEventPerspective: false
-    },
-    {
-      viewName: 'Year',
-      viewType: ViewTypes.Year,
-      showAgenda: false,
-      isEventPerspective: false
     }
+    // {
+    //   viewName: 'Quarter',
+    //   viewType: ViewTypes.Quarter,
+    //   showAgenda: false,
+    //   isEventPerspective: false
+    // },
+    // {
+    //   viewName: 'Year',
+    //   viewType: ViewTypes.Year,
+    //   showAgenda: false,
+    //   isEventPerspective: false
+    // }
   ]
 };
