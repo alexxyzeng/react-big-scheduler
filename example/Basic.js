@@ -20,7 +20,7 @@ class Basic extends Component {
 
     //let schedulerData = new SchedulerData(new moment("2017-12-18").format(DATE_FORMAT), ViewTypes.Week);
     let schedulerData = new SchedulerData(
-      '2017-12-18',
+      '2019-03-01',
       ViewTypes.Day,
       false,
       false,
@@ -38,12 +38,8 @@ class Basic extends Component {
     const { viewModel } = this.state;
     return (
       <div>
-        <Nav />
         <div>
-          <h3 style={{ textAlign: 'center' }}>
-            Basic example
-            <ViewSrcCode srcCodeUrl="https://github.com/StephenChou1017/react-big-scheduler/blob/master/example/Basic.js" />
-          </h3>
+          <h3 style={{ textAlign: 'center' }}>Basic example</h3>
           <Scheduler
             schedulerData={viewModel}
             prevClick={this.prevClick}
@@ -59,11 +55,11 @@ class Basic extends Component {
             updateEventEnd={this.updateEventEnd}
             moveEvent={this.moveEvent}
             newEvent={this.newEvent}
-            onScrollLeft={this.onScrollLeft}
-            onScrollRight={this.onScrollRight}
-            onScrollTop={this.onScrollTop}
-            onScrollBottom={this.onScrollBottom}
-            slotClickedFunc={this.onSlotClicked}
+            // onScrollLeft={this.onScrollLeft}
+            // onScrollRight={this.onScrollRight}
+            // onScrollTop={this.onScrollTop}
+            // onScrollBottom={this.onScrollBottom}
+            // slotClickedFunc={this.onSlotClicked}
           />
         </div>
         <Tips />
