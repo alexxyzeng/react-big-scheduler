@@ -109,6 +109,7 @@ class ResourceEvents extends Component {
     });
   };
 
+  //  TODO: 优化mouseup事件的耗时
   stopDrag = ev => {
     ev.stopPropagation();
     const { schedulerData, newEvent, resourceEvents } = this.props;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
 import Popover from 'antd/lib/popover';
 import 'antd/lib/popover/style/index.css';
@@ -6,7 +6,8 @@ import EventItemPopover from './EventItemPopover';
 import { CellUnits, DATETIME_FORMAT } from './index';
 import { DnDTypes } from './DnDTypes';
 
-class EventItem extends Component {
+//  待优化
+class EventItem extends PureComponent {
   constructor(props) {
     super(props);
 

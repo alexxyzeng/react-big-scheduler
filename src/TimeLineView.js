@@ -1,8 +1,8 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { CellUnits } from './index';
 
-class HeaderView extends PureComponent {
+class HeaderView extends Component {
   constructor(props) {
     super(props);
   }

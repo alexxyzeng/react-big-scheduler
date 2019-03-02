@@ -98,7 +98,6 @@ export default class DnDSource {
         }
 
         if (hasConflict) {
-          console.log('111');
           const { conflictOccurred } = props;
           if (conflictOccurred != undefined) {
             conflictOccurred(
