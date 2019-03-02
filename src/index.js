@@ -149,13 +149,7 @@ class Scheduler extends Component {
       nonAgendaCellHeaderTemplateResolver,
       size: { height }
     } = this.props;
-    const {
-      renderData,
-      viewType,
-      showAgenda,
-      isEventPerspective,
-      config
-    } = schedulerData;
+    const { viewType, showAgenda, isEventPerspective, config } = schedulerData;
     const width = schedulerData.getSchedulerWidth();
     const calendarPopoverEnabled = config.calendarPopoverEnabled;
     //  设置时间标签
@@ -164,28 +158,13 @@ class Scheduler extends Component {
     let defaultValue = `${viewType}${showAgenda ? 1 : 0}${
       isEventPerspective ? 1 : 0
     }`;
-    let radioButtonList = config.views.map(item => {
-      return (
-        <RadioButton
-          key={`${item.viewType}${item.showAgenda ? 1 : 0}${
-            item.isEventPerspective ? 1 : 0
-          }`}
-          value={`${item.viewType}${item.showAgenda ? 1 : 0}${
-            item.isEventPerspective ? 1 : 0
-          }`}
-        >
-          <span style={{ margin: '0px 8px' }}>{item.viewName}</span>
-        </RadioButton>
-      );
-    });
+    let radioButtonList = this.getCalendarGroup(config);
     //  TODO: 重构列表代码
     let tbodyContent = this.renderBodyContent(
-      showAgenda,
-      width,
-      height,
       schedulerData,
-      renderData,
-      config
+      nonAgendaCellHeaderTemplateResolver,
+      width,
+      height
     );
 
     let popover = (
@@ -194,63 +173,16 @@ class Scheduler extends Component {
       </div>
     );
     //  TODO: 抽离头部组件
-    let schedulerHeader = <div />;
-    if (config.headerEnabled) {
-      schedulerHeader = (
-        <Row
-          type="flex"
-          align="middle"
-          justify="space-between"
-          style={{ marginBottom: '24px' }}
-        >
-          {leftCustomHeader}
-          <Col>
-            <div className="header2-text">
-              <Icon
-                type="left"
-                style={{ marginRight: '8px' }}
-                className="icon-nav"
-                onClick={this.goBack}
-              />
-              {calendarPopoverEnabled ? (
-                <Popover
-                  content={popover}
-                  placement="bottom"
-                  trigger="click"
-                  visible={this.state.visible}
-                  onVisibleChange={this.handleVisibleChange}
-                >
-                  <span
-                    className={'header2-text-label'}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    {dateLabel}
-                  </span>
-                </Popover>
-              ) : (
-                <span className={'header2-text-label'}>{dateLabel}</span>
-              )}
-              <Icon
-                type="right"
-                style={{ marginLeft: '8px' }}
-                className="icon-nav"
-                onClick={this.goNext}
-              />
-            </div>
-          </Col>
-          <Col>
-            <RadioGroup
-              defaultValue={defaultValue}
-              size="default"
-              onChange={this.onViewChange}
-            >
-              {radioButtonList}
-            </RadioGroup>
-          </Col>
-          {rightCustomHeader}
-        </Row>
-      );
-    }
+    let schedulerHeader = this.getHeader(
+      config,
+      leftCustomHeader,
+      calendarPopoverEnabled,
+      popover,
+      dateLabel,
+      defaultValue,
+      radioButtonList,
+      rightCustomHeader
+    );
 
     return (
       <table
@@ -444,10 +376,6 @@ class Scheduler extends Component {
         );
       }
     }
-    // this.setState({
-    //   scrollLeft: this.schedulerContent.scrollLeft,
-    //   scrollTop: this.schedulerContent.scrollTop
-    // });
     this.scrollLeft = scrollLeft;
     this.scrollTop = scrollTop;
   };
@@ -487,15 +415,100 @@ class Scheduler extends Component {
     onSelectDate(schedulerData, date);
   };
 
-  renderBodyContent(
-    showAgenda,
-    width,
-    height,
-    schedulerData,
-    renderData,
+  getHeader(
     config,
-    nonAgendaCellHeaderTemplateResolver
+    leftCustomHeader,
+    calendarPopoverEnabled,
+    popover,
+    dateLabel,
+    defaultValue,
+    radioButtonList,
+    rightCustomHeader
   ) {
+    let schedulerHeader = <div />;
+    if (config.headerEnabled) {
+      schedulerHeader = (
+        <Row
+          type="flex"
+          align="middle"
+          justify="space-between"
+          style={{ marginBottom: '24px' }}
+        >
+          {leftCustomHeader}
+          <Col>
+            <div className="header2-text">
+              <Icon
+                type="left"
+                style={{ marginRight: '8px' }}
+                className="icon-nav"
+                onClick={this.goBack}
+              />
+              {calendarPopoverEnabled ? (
+                <Popover
+                  content={popover}
+                  placement="bottom"
+                  trigger="click"
+                  visible={this.state.visible}
+                  onVisibleChange={this.handleVisibleChange}
+                >
+                  <span
+                    className={'header2-text-label'}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {dateLabel}
+                  </span>
+                </Popover>
+              ) : (
+                <span className={'header2-text-label'}>{dateLabel}</span>
+              )}
+              <Icon
+                type="right"
+                style={{ marginLeft: '8px' }}
+                className="icon-nav"
+                onClick={this.goNext}
+              />
+            </div>
+          </Col>
+          <Col>
+            <RadioGroup
+              defaultValue={defaultValue}
+              size="default"
+              onChange={this.onViewChange}
+            >
+              {radioButtonList}
+            </RadioGroup>
+          </Col>
+          {rightCustomHeader}
+        </Row>
+      );
+    }
+    return schedulerHeader;
+  }
+
+  getCalendarGroup(config) {
+    return config.views.map(item => {
+      return (
+        <RadioButton
+          key={`${item.viewType}${item.showAgenda ? 1 : 0}${
+            item.isEventPerspective ? 1 : 0
+          }`}
+          value={`${item.viewType}${item.showAgenda ? 1 : 0}${
+            item.isEventPerspective ? 1 : 0
+          }`}
+        >
+          <span style={{ margin: '0px 8px' }}>{item.viewName}</span>
+        </RadioButton>
+      );
+    });
+  }
+
+  renderBodyContent(
+    schedulerData,
+    nonAgendaCellHeaderTemplateResolver,
+    width,
+    height
+  ) {
+    const { renderData, showAgenda, config } = schedulerData;
     if (showAgenda) {
       return <AgendaView {...this.props} />;
     }
@@ -727,6 +740,7 @@ Scheduler.propTypes = {
   //  冲突检查
   conflictOccurred: PropTypes.func,
   //  自定义事件模板
+  eventItem: PropTypes.object,
   eventItemTemplateResolver: PropTypes.func,
   dndSources: PropTypes.array,
   slotClickedFunc: PropTypes.func,
@@ -738,5 +752,6 @@ Scheduler.propTypes = {
   onScrollTop: PropTypes.func,
   onScrollBottom: PropTypes.func,
   //  宽高
-  size: PropTypes.object
+  size: PropTypes.object,
+  showTimeIndicator: PropTypes.bool
 };

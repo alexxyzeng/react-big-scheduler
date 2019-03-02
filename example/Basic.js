@@ -41,6 +41,7 @@ class Basic extends Component {
         <div>
           <h3 style={{ textAlign: 'center' }}>Basic example</h3>
           <Scheduler
+            size={{ width: 1200, height: 640 }}
             schedulerData={viewModel}
             prevClick={this.prevClick}
             nextClick={this.nextClick}
