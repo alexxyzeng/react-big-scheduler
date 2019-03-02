@@ -39,7 +39,7 @@ import EventItem from './EventItem';
 import DnDSource from './DnDSource';
 import DnDContext from './DnDContext';
 import ResourceView from './ResourceView';
-import HeaderView from './HeaderView';
+import HeaderView from './TimeLineView';
 import BodyView from './BodyView';
 import ResourceEvents from './ResourceEvents';
 import AgendaView from './AgendaView';
@@ -69,7 +69,8 @@ class Scheduler extends Component {
     let dndContext = new DnDContext(sources, ResourceEvents);
 
     this.currentArea = -1;
-    schedulerData._setDocumentWidth(1240);
+    // TODO: 增加设置宽度的api
+    schedulerData._setDocumentWidth(1200);
     this.state = {
       visible: false,
       dndContext: dndContext,
@@ -78,16 +79,20 @@ class Scheduler extends Component {
       contentScrollbarWidth: 17,
       resourceScrollbarHeight: 17,
       resourceScrollbarWidth: 17,
-      scrollLeft: 0,
-      scrollTop: 0,
+
       documentWidth: document.documentElement.clientWidth,
       documentHeight: document.documentElement.clientHeight
     };
 
-    if (schedulerData.isSchedulerResponsive())
+    this.scrollTop = 0;
+    this.scrollLeft = 0;
+
+    if (schedulerData.isSchedulerResponsive()) {
       window.onresize = this.onWindowResize;
+    }
   }
 
+  //  TODO: 修改resize事件
   onWindowResize = e => {
     const { schedulerData } = this.props;
     schedulerData._setDocumentWidth(document.documentElement.clientWidth);
@@ -95,53 +100,6 @@ class Scheduler extends Component {
       documentWidth: document.documentElement.clientWidth,
       documentHeight: document.documentElement.clientHeight
     });
-  };
-
-  static propTypes = {
-    //  列表数据
-    schedulerData: PropTypes.object.isRequired,
-    //  前一天
-    prevClick: PropTypes.func.isRequired,
-    //  后一天
-    nextClick: PropTypes.func.isRequired,
-    //  切换视图模型
-    onViewChange: PropTypes.func.isRequired,
-    //  选择日期
-    onSelectDate: PropTypes.func.isRequired,
-    onSetAddMoreState: PropTypes.func,
-    //  更新会议开始时间
-    updateEventStart: PropTypes.func,
-    //  更新会议结束时间
-    updateEventEnd: PropTypes.func,
-    //  移动会议
-    moveEvent: PropTypes.func,
-    //  自定义左侧头部
-    leftCustomHeader: PropTypes.object,
-    //  自定义右侧头部
-    rightCustomHeader: PropTypes.object,
-    //  新建会议
-    newEvent: PropTypes.func,
-    subtitleGetter: PropTypes.func,
-    //  会议点击事件
-    eventItemClick: PropTypes.func,
-    //  点击popover的文字和事件
-    viewEventClick: PropTypes.func,
-    viewEventText: PropTypes.string,
-    viewEvent2Click: PropTypes.func,
-    viewEvent2Text: PropTypes.string,
-    //  冲突检查
-    conflictOccurred: PropTypes.func,
-    //  自定义事件模板
-    eventItemTemplateResolver: PropTypes.func,
-    dndSources: PropTypes.array,
-    slotClickedFunc: PropTypes.func,
-    slotItemTemplateResolver: PropTypes.func,
-    nonAgendaCellHeaderTemplateResolver: PropTypes.func,
-    //  各个方向的滚动事件
-    onScrollLeft: PropTypes.func,
-    onScrollRight: PropTypes.func,
-    onScrollTop: PropTypes.func,
-    onScrollBottom: PropTypes.func
   };
 
   componentDidMount(props, state) {
@@ -184,7 +142,12 @@ class Scheduler extends Component {
   }
 
   render() {
-    const { schedulerData, leftCustomHeader, rightCustomHeader } = this.props;
+    const {
+      schedulerData,
+      leftCustomHeader,
+      rightCustomHeader,
+      nonAgendaCellHeaderTemplateResolver
+    } = this.props;
     const {
       renderData,
       viewType,
@@ -214,174 +177,21 @@ class Scheduler extends Component {
         </RadioButton>
       );
     });
-
-    let tbodyContent = <tr />;
-    if (showAgenda) {
-      tbodyContent = <AgendaView {...this.props} />;
-    } else {
-      //  左侧导航信息列表
-      //   let resourceTableWidth = schedulerData.getResourceTableWidth();
-      let resourceTableWidth = 320;
-      let schedulerContainerWidth = width - resourceTableWidth + 1;
-      let schedulerWidth = schedulerData.getContentTableWidth() - 1;
-      let DndResourceEvents = this.state.dndContext.getDropTarget();
-      let eventDndSource = this.state.dndContext.getDndSource();
-      let resourceEventsList = renderData.map(item => {
-        return (
-          <DndResourceEvents
-            {...this.props}
-            key={item.slotId}
-            resourceEvents={item}
-            dndSource={eventDndSource}
-          />
-        );
-      });
-
-      let contentScrollbarHeight = this.state.contentScrollbarHeight,
-        contentScrollbarWidth = this.state.contentScrollbarWidth,
-        resourceScrollbarHeight = this.state.resourceScrollbarHeight,
-        resourceScrollbarWidth = this.state.resourceScrollbarWidth,
-        contentHeight = this.state.contentHeight;
-      let resourcePaddingBottom =
-        resourceScrollbarHeight === 0 ? contentScrollbarHeight : 0;
-      let contentPaddingBottom =
-        contentScrollbarHeight === 0 ? resourceScrollbarHeight : 0;
-      let schedulerContentStyle = {
-        overflow: 'auto',
-        margin: '0px',
-        position: 'relative',
-        paddingBottom: contentPaddingBottom
-      };
-      let resourceContentStyle = {
-        overflowX: 'auto',
-        overflowY: 'auto',
-        width: resourceTableWidth + resourceScrollbarWidth - 2,
-        margin: `0px -${contentScrollbarWidth}px 0px 0px`
-      };
-      if (config.schedulerMaxHeight > 0) {
-        schedulerContentStyle = {
-          ...schedulerContentStyle,
-          maxHeight: config.schedulerMaxHeight - config.tableHeaderHeight
-        };
-        resourceContentStyle = {
-          ...resourceContentStyle,
-          maxHeight: config.schedulerMaxHeight - config.tableHeaderHeight
-        };
-      }
-      let resourceName = schedulerData.isEventPerspective
-        ? config.taskName
-        : config.resourceName;
-      tbodyContent = (
-        <tr>
-          <td style={{ width: resourceTableWidth, verticalAlign: 'top' }}>
-            <div className="resource-view">
-              <div
-                style={{
-                  overflow: 'hidden',
-                  borderBottom: '1px solid #e9e9e9',
-                  height: config.tableHeaderHeight
-                }}
-              >
-                <div
-                  style={{
-                    overflowX: 'scroll',
-                    overflowY: 'hidden',
-                    margin: `0px 0px -${contentScrollbarHeight}px`
-                  }}
-                >
-                  <table className="resource-table">
-                    <thead>
-                      <tr style={{ height: config.tableHeaderHeight }}>
-                        <th className="header3-text">{resourceName}</th>
-                      </tr>
-                    </thead>
-                  </table>
-                </div>
-              </div>
-              <div
-                style={resourceContentStyle}
-                ref={this.schedulerResourceRef}
-                onMouseOver={this.onSchedulerResourceMouseOver}
-                onMouseOut={this.onSchedulerResourceMouseOut}
-                onScroll={this.onSchedulerResourceScroll}
-              >
-                <ResourceView
-                  {...this.props}
-                  contentScrollbarHeight={resourcePaddingBottom}
-                />
-              </div>
-            </div>
-          </td>
-          <td>
-            <div
-              className="scheduler-view"
-              style={{ width: schedulerContainerWidth, verticalAlign: 'top' }}
-            >
-              <div
-                style={{
-                  overflow: 'hidden',
-                  borderBottom: '1px solid #e9e9e9',
-                  height: config.tableHeaderHeight
-                }}
-              >
-                <div
-                  style={{
-                    overflowX: 'scroll',
-                    overflowY: 'hidden',
-                    margin: `0px 0px -${contentScrollbarHeight}px`
-                  }}
-                  ref={this.schedulerHeadRef}
-                  onMouseOver={this.onSchedulerHeadMouseOver}
-                  onMouseOut={this.onSchedulerHeadMouseOut}
-                  onScroll={this.onSchedulerHeadScroll}
-                >
-                  <div
-                    style={{
-                      paddingRight: `${contentScrollbarWidth}px`,
-                      width: schedulerWidth + contentScrollbarWidth
-                    }}
-                  >
-                    <table className="scheduler-bg-table">
-                      <HeaderView {...this.props} />
-                    </table>
-                  </div>
-                </div>
-              </div>
-              <div
-                style={schedulerContentStyle}
-                ref={this.schedulerContentRef}
-                onMouseOver={this.onSchedulerContentMouseOver}
-                onMouseOut={this.onSchedulerContentMouseOut}
-                onScroll={this.onSchedulerContentScroll}
-              >
-                <div style={{ width: schedulerWidth, height: contentHeight }}>
-                  <div className="scheduler-content">
-                    <table className="scheduler-content-table">
-                      <tbody>{resourceEventsList}</tbody>
-                    </table>
-                  </div>
-                  <div className="scheduler-bg">
-                    <table
-                      className="scheduler-bg-table"
-                      style={{ width: schedulerWidth }}
-                      ref={this.schedulerContentBgTableRef}
-                    >
-                      <BodyView {...this.props} />
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </td>
-        </tr>
-      );
-    }
+    //  TODO: 重构列表代码
+    let tbodyContent = this.renderBodyContent(
+      showAgenda,
+      width,
+      schedulerData,
+      renderData,
+      config
+    );
 
     let popover = (
       <div className="popover-calendar">
         <Calendar fullscreen={false} onSelect={this.onSelect} />
       </div>
     );
+    //  TODO: 抽离头部组件
     let schedulerHeader = <div />;
     if (config.headerEnabled) {
       schedulerHeader = (
@@ -588,7 +398,7 @@ class Scheduler extends Component {
       onScrollTop,
       onScrollBottom
     } = this.props;
-    const { scrollLeft, scrollTop } = this.state;
+    const { scrollLeft, scrollTop } = this;
     if (this.schedulerContent.scrollLeft !== scrollLeft) {
       if (this.schedulerContent.scrollLeft === 0 && onScrollLeft != undefined) {
         onScrollLeft(
@@ -632,10 +442,12 @@ class Scheduler extends Component {
         );
       }
     }
-    this.setState({
-      scrollLeft: this.schedulerContent.scrollLeft,
-      scrollTop: this.schedulerContent.scrollTop
-    });
+    // this.setState({
+    //   scrollLeft: this.schedulerContent.scrollLeft,
+    //   scrollTop: this.schedulerContent.scrollTop
+    // });
+    this.scrollLeft = scrollLeft;
+    this.scrollTop = scrollTop;
   };
 
   onViewChange = e => {
@@ -672,6 +484,196 @@ class Scheduler extends Component {
     const { onSelectDate, schedulerData } = this.props;
     onSelectDate(schedulerData, date);
   };
+
+  renderBodyContent(
+    showAgenda,
+    width,
+    schedulerData,
+    renderData,
+    config,
+    nonAgendaCellHeaderTemplateResolver
+  ) {
+    if (showAgenda) {
+      return <AgendaView {...this.props} />;
+    }
+    let tbodyContent = <tr />;
+    //  TODO: 左侧导航信息列表，研究如何自定义内容和宽高
+    //   let resourceTableWidth = schedulerData.getResourceTableWidth();
+    let resourceTableWidth = 320;
+    let schedulerContainerWidth = width - resourceTableWidth + 1;
+    let schedulerWidth = schedulerData.getContentTableWidth() - 1;
+    let DndResourceEvents = this.state.dndContext.getDropTarget();
+    let eventDndSource = this.state.dndContext.getDndSource();
+    let resourceEventsList = renderData.map(item => {
+      return (
+        <DndResourceEvents
+          {...this.props}
+          key={item.slotId}
+          resourceEvents={item}
+          dndSource={eventDndSource}
+        />
+      );
+    });
+    // let contentScrollbarHeight = this.state.contentScrollbarHeight,
+    //   contentScrollbarWidth = this.state.contentScrollbarWidth,
+    //   resourceScrollbarHeight = this.state.resourceScrollbarHeight,
+    //   resourceScrollbarWidth = this.state.resourceScrollbarWidth,
+    //   contentHeight = this.state.contentHeight;
+    const {
+      contentScrollbarHeight,
+      contentScrollbarWidth,
+      resourceScrollbarHeight,
+      resourceScrollbarWidth,
+      contentHeight
+    } = this.state;
+    let resourcePaddingBottom =
+      resourceScrollbarHeight === 0 ? contentScrollbarHeight : 0;
+    let contentPaddingBottom =
+      contentScrollbarHeight === 0 ? resourceScrollbarHeight : 0;
+    let schedulerContentStyle = {
+      overflow: 'auto',
+      margin: '0px',
+      position: 'relative',
+      paddingBottom: contentPaddingBottom
+    };
+    let resourceContentStyle = {
+      overflowX: 'auto',
+      overflowY: 'auto',
+      width: resourceTableWidth + resourceScrollbarWidth - 2,
+      margin: `0px -${contentScrollbarWidth}px 0px 0px`
+    };
+    if (config.schedulerMaxHeight > 0) {
+      schedulerContentStyle = {
+        ...schedulerContentStyle,
+        maxHeight: config.schedulerMaxHeight - config.tableHeaderHeight
+      };
+      resourceContentStyle = {
+        ...resourceContentStyle,
+        maxHeight: config.schedulerMaxHeight - config.tableHeaderHeight
+      };
+    }
+    let resourceName = schedulerData.isEventPerspective
+      ? config.taskName
+      : config.resourceName;
+    tbodyContent = (
+      <tr>
+        <td style={{ width: resourceTableWidth, verticalAlign: 'top' }}>
+          <div className="resource-view">
+            <div
+              style={{
+                overflow: 'hidden',
+                borderBottom: '1px solid #e9e9e9',
+                height: config.tableHeaderHeight
+              }}
+            >
+              <div
+                style={{
+                  overflowX: 'scroll',
+                  overflowY: 'hidden',
+                  margin: `0px 0px -${contentScrollbarHeight}px`
+                }}
+              >
+                <table className="resource-table">
+                  <thead>
+                    <tr style={{ height: config.tableHeaderHeight }}>
+                      <th className="header3-text">{resourceName}</th>
+                    </tr>
+                  </thead>
+                </table>
+              </div>
+            </div>
+            <div
+              style={resourceContentStyle}
+              ref={this.schedulerResourceRef}
+              onMouseOver={this.onSchedulerResourceMouseOver}
+              onMouseOut={this.onSchedulerResourceMouseOut}
+              onScroll={this.onSchedulerResourceScroll}
+            >
+              <ResourceView
+                {...this.props}
+                contentScrollbarHeight={resourcePaddingBottom}
+              />
+            </div>
+          </div>
+        </td>
+        <td>
+          <div
+            className="scheduler-view"
+            style={{ width: schedulerContainerWidth, verticalAlign: 'top' }}
+          >
+            <div
+              style={{
+                overflow: 'hidden',
+                borderBottom: '1px solid #e9e9e9',
+                height: config.tableHeaderHeight
+              }}
+            >
+              <div
+                style={{
+                  overflowX: 'scroll',
+                  overflowY: 'hidden',
+                  margin: `0px 0px -${contentScrollbarHeight}px`
+                }}
+                ref={this.schedulerHeadRef}
+                onMouseOver={this.onSchedulerHeadMouseOver}
+                onMouseOut={this.onSchedulerHeadMouseOut}
+                onScroll={this.onSchedulerHeadScroll}
+              >
+                <div
+                  style={{
+                    paddingRight: `${contentScrollbarWidth}px`,
+                    width: schedulerWidth + contentScrollbarWidth
+                  }}
+                >
+                  <HeaderView
+                    schedulerData={schedulerData}
+                    nonAgendaCellHeaderTemplateResolver={
+                      nonAgendaCellHeaderTemplateResolver
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              style={schedulerContentStyle}
+              ref={this.schedulerContentRef}
+              onMouseOver={this.onSchedulerContentMouseOver}
+              onMouseOut={this.onSchedulerContentMouseOut}
+              onScroll={this.onSchedulerContentScroll}
+            >
+              <div style={{ width: schedulerWidth, height: contentHeight }}>
+                <div className="scheduler-content">
+                  <table className="scheduler-content-table">
+                    <tbody>{resourceEventsList}</tbody>
+                  </table>
+                </div>
+                {this.renderBackgroundView(schedulerWidth)}
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    );
+    return tbodyContent;
+  }
+
+  //  背景图
+  /* TODO: 实现自定义功能：选中时间范围等等 */
+
+  renderBackgroundView = schedulerWidth => {
+    const { schedulerData } = this.props;
+    return (
+      <div className="scheduler-bg">
+        <table
+          className="scheduler-bg-table"
+          style={{ width: schedulerWidth }}
+          ref={this.schedulerContentBgTableRef}
+        >
+          <BodyView schedulerData={schedulerData} />
+        </table>
+      </div>
+    );
+  };
 }
 
 export const DATE_FORMAT = 'YYYY-MM-DD';
@@ -687,3 +689,50 @@ export {
   DemoData
 };
 export default Scheduler;
+
+Scheduler.propTypes = {
+  //  列表数据
+  schedulerData: PropTypes.object.isRequired,
+  //  前一天
+  prevClick: PropTypes.func.isRequired,
+  //  后一天
+  nextClick: PropTypes.func.isRequired,
+  //  切换视图模型
+  onViewChange: PropTypes.func.isRequired,
+  //  选择日期
+  onSelectDate: PropTypes.func.isRequired,
+  onSetAddMoreState: PropTypes.func,
+  //  更新会议开始时间
+  updateEventStart: PropTypes.func,
+  //  更新会议结束时间
+  updateEventEnd: PropTypes.func,
+  //  移动会议
+  moveEvent: PropTypes.func,
+  //  自定义左侧头部
+  leftCustomHeader: PropTypes.object,
+  //  自定义右侧头部
+  rightCustomHeader: PropTypes.object,
+  //  新建会议
+  newEvent: PropTypes.func,
+  subtitleGetter: PropTypes.func,
+  //  会议点击事件
+  eventItemClick: PropTypes.func,
+  //  点击popover的文字和事件
+  viewEventClick: PropTypes.func,
+  viewEventText: PropTypes.string,
+  viewEvent2Click: PropTypes.func,
+  viewEvent2Text: PropTypes.string,
+  //  冲突检查
+  conflictOccurred: PropTypes.func,
+  //  自定义事件模板
+  eventItemTemplateResolver: PropTypes.func,
+  dndSources: PropTypes.array,
+  slotClickedFunc: PropTypes.func,
+  slotItemTemplateResolver: PropTypes.func,
+  nonAgendaCellHeaderTemplateResolver: PropTypes.func,
+  //  各个方向的滚动事件
+  onScrollLeft: PropTypes.func,
+  onScrollRight: PropTypes.func,
+  onScrollTop: PropTypes.func,
+  onScrollBottom: PropTypes.func
+};
