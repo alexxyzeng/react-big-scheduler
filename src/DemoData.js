@@ -443,13 +443,3 @@ const DemoData = {
 };
 
 export default DemoData;
-
-let arr = [];
-for (let i = 0; i < 100; i++) {
-  arr.push({
-    id: `r${i}`,
-    name: `Resource${i}`
-  });
-}
-
-console.log(arr);

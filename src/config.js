@@ -4,7 +4,7 @@ import SummaryPos from './SummaryPos';
 export default {
   schedulerWidth: '100%',
   besidesWidth: 20,
-  schedulerMaxHeight: 0,
+  schedulerMaxHeight: 640,
   tableHeaderHeight: 40,
 
   agendaResourceTableWidth: 160,
@@ -19,11 +19,11 @@ export default {
 
   dayCellWidth: 15,
   weekCellWidth: '12%',
-  monthCellWidth: 80,
-  quarterCellWidth: 80,
-  yearCellWidth: 80,
-  customCellWidth: 80,
-
+  monthCellWidth: 120,
+  quarterCellWidth: 120,
+  yearCellWidth: 120,
+  customCellWidth: 120,
+  //  TODO: 修改关于显示最多会议数量的逻辑
   dayMaxEvents: 99,
   weekMaxEvents: 99,
   monthMaxEvents: 99,
@@ -31,7 +31,8 @@ export default {
   yearMaxEvents: 99,
   customMaxEvents: 99,
 
-  eventItemHeight: 32,
+  //  TODO: 考虑将这段配置移出
+  eventItemHeight: 36,
   eventItemLineHeight: 36,
   nonAgendaSlotMinHeight: 0,
   dayStartFrom: 0,
@@ -39,8 +40,11 @@ export default {
   defaultEventBgColor: '#80C5F6',
   selectedAreaColor: '#7EC2F3',
   nonWorkingTimeHeadColor: '#999999',
-  nonWorkingTimeHeadBgColor: '#fff0f6',
-  nonWorkingTimeBodyBgColor: '#fff0f6',
+  workingTimeHeadColor: '',
+  // nonWorkingTimeHeadBgColor: '#fff0f6',
+  // nonWorkingTimeBodyBgColor: '#fff0f6',
+  focusTimeBgColor: '#999999',
+  borderColor: '#E3F0FB',
   summaryColor: '#666',
   summaryPos: SummaryPos.TopRight,
 
@@ -57,13 +61,13 @@ export default {
   headerEnabled: true,
   displayWeekend: true,
   relativeMove: true,
-
+  //  TODO: 增加自定义列表数
   resourceName: '会议室列表',
   taskName: 'Task Name',
   agendaViewHeader: 'Agenda',
   addMorePopoverHeaderFormat: 'MMM D, YYYY dddd',
   eventItemPopoverDateFormat: 'MMM D',
-  nonAgendaDayCellHeaderFormat: 'ha',
+  nonAgendaDayCellHeaderFormat: 'HH:mm',
   nonAgendaOtherCellHeaderFormat: 'ddd M/D',
 
   minuteStep: 15,

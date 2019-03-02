@@ -56,7 +56,7 @@ class Scheduler extends Component {
   constructor(props) {
     super(props);
 
-    const { schedulerData, dndSources } = props;
+    const { schedulerData, dndSources, size } = props;
     let sources = [];
     sources.push(
       new DnDSource(props => {
@@ -70,7 +70,7 @@ class Scheduler extends Component {
 
     this.currentArea = -1;
     // TODO: 增加设置宽度的api
-    schedulerData._setDocumentWidth(1200);
+    schedulerData.setDocumentSize(size);
     this.state = {
       visible: false,
       dndContext: dndContext,
@@ -146,7 +146,8 @@ class Scheduler extends Component {
       schedulerData,
       leftCustomHeader,
       rightCustomHeader,
-      nonAgendaCellHeaderTemplateResolver
+      nonAgendaCellHeaderTemplateResolver,
+      size: { height }
     } = this.props;
     const {
       renderData,
@@ -181,6 +182,7 @@ class Scheduler extends Component {
     let tbodyContent = this.renderBodyContent(
       showAgenda,
       width,
+      height,
       schedulerData,
       renderData,
       config
@@ -488,6 +490,7 @@ class Scheduler extends Component {
   renderBodyContent(
     showAgenda,
     width,
+    height,
     schedulerData,
     renderData,
     config,
@@ -514,11 +517,6 @@ class Scheduler extends Component {
         />
       );
     });
-    // let contentScrollbarHeight = this.state.contentScrollbarHeight,
-    //   contentScrollbarWidth = this.state.contentScrollbarWidth,
-    //   resourceScrollbarHeight = this.state.resourceScrollbarHeight,
-    //   resourceScrollbarWidth = this.state.resourceScrollbarWidth,
-    //   contentHeight = this.state.contentHeight;
     const {
       contentScrollbarHeight,
       contentScrollbarWidth,
@@ -542,14 +540,14 @@ class Scheduler extends Component {
       width: resourceTableWidth + resourceScrollbarWidth - 2,
       margin: `0px -${contentScrollbarWidth}px 0px 0px`
     };
-    if (config.schedulerMaxHeight > 0) {
+    if (height > 0) {
       schedulerContentStyle = {
         ...schedulerContentStyle,
-        maxHeight: config.schedulerMaxHeight - config.tableHeaderHeight
+        height: height - config.tableHeaderHeight
       };
       resourceContentStyle = {
         ...resourceContentStyle,
-        maxHeight: config.schedulerMaxHeight - config.tableHeaderHeight
+        height: height - config.tableHeaderHeight
       };
     }
     let resourceName = schedulerData.isEventPerspective
@@ -642,12 +640,19 @@ class Scheduler extends Component {
               onScroll={this.onSchedulerContentScroll}
             >
               <div style={{ width: schedulerWidth, height: contentHeight }}>
+                {/* 会议信息 */}
                 <div className="scheduler-content">
                   <table className="scheduler-content-table">
                     <tbody>{resourceEventsList}</tbody>
                   </table>
                 </div>
-                {this.renderBackgroundView(schedulerWidth)}
+                {/* 背景 */}
+                <BodyView
+                  schedulerWidth={schedulerWidth}
+                  schedulerData={schedulerData}
+                  height={height}
+                  type={schedulerData.viewType}
+                />
               </div>
             </div>
           </div>
@@ -662,16 +667,13 @@ class Scheduler extends Component {
 
   renderBackgroundView = schedulerWidth => {
     const { schedulerData } = this.props;
+
     return (
-      <div className="scheduler-bg">
-        <table
-          className="scheduler-bg-table"
-          style={{ width: schedulerWidth }}
-          ref={this.schedulerContentBgTableRef}
-        >
-          <BodyView schedulerData={schedulerData} />
-        </table>
-      </div>
+      <BodyView
+        schedulerWidth={schedulerWidth}
+        schedulerData={schedulerData}
+        type={schedulerData.viewType}
+      />
     );
   };
 }
@@ -734,5 +736,7 @@ Scheduler.propTypes = {
   onScrollLeft: PropTypes.func,
   onScrollRight: PropTypes.func,
   onScrollTop: PropTypes.func,
-  onScrollBottom: PropTypes.func
+  onScrollBottom: PropTypes.func,
+  //  宽高
+  size: PropTypes.object
 };

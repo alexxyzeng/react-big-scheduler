@@ -128,8 +128,9 @@ export default class SchedulerData {
   }
 
   setScrollToSpecialMoment(scrollToSpecialMoment) {
-    if (this.config.scrollToSpecialMomentEnabled)
+    if (this.config.scrollToSpecialMomentEnabled) {
       this.scrollToSpecialMoment = scrollToSpecialMoment;
+    }
   }
 
   prev() {
@@ -475,10 +476,29 @@ export default class SchedulerData {
       : this.config.customCellWidth;
   }
 
+  getContentCellHeight() {
+    return this.config.eventItemHeight || 0;
+  }
+
   _setDocumentWidth(documentWidth) {
     if (documentWidth >= 0) {
       this.documentWidth = documentWidth;
     }
+  }
+
+  _setDocumentHeight(documentHeight) {
+    if (documentHeight >= 0) {
+      this.documentHeight = documentHeight;
+    }
+  }
+
+  setDocumentSize(size) {
+    if (!size) {
+      return;
+    }
+    const { width = 0, height = 0 } = size || {};
+    this._setDocumentWidth(width);
+    this._setDocumentHeight(height);
   }
 
   _detachEvent(event) {
