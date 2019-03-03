@@ -25,7 +25,7 @@ class HeaderView extends React.PureComponent {
           style = item.nonWorkingTime
             ? {
               width: cellWidth * minuteStepsInHour,
-                // color: config.nonWorkingTimeHeadColor,
+              // color: config.nonWorkingTimeHeadColor,
               backgroundColor: config.nonWorkingTimeHeadBgColor
             }
             : { width: cellWidth * minuteStepsInHour }
@@ -33,7 +33,7 @@ class HeaderView extends React.PureComponent {
           if (index === headers.length - minuteStepsInHour)
             style = item.nonWorkingTime
               ? {
-                  // color: config.nonWorkingTimeHeadColor,
+                // color: config.nonWorkingTimeHeadColor,
                 backgroundColor: config.nonWorkingTimeHeadBgColor
               }
               : {}

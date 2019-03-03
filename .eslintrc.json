@@ -17,7 +17,9 @@
   "rules": {
     "indent": ["error", 2],
     "quotes": ["error", "single"],
-    "semi": ["error", "never"]
+    "semi": ["error", "never"],
+    "react/jsx-uses-vars": 2,
+    "react/jsx-uses-react": 1
   },
   "parser": "babel-eslint"
 }

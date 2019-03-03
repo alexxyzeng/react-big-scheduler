@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
 import { PropTypes } from 'prop-types'
 // Col, Row and Icon do not have their own less files for styling. They use
@@ -39,11 +40,12 @@ import EventItem from './EventItem'
 import DnDSource from './DnDSource'
 import DnDContext from './DnDContext'
 import ResourceView from './ResourceView'
-import HeaderView from './TimeLineView'
+import TimeLineView from './TimeLineView'
 import BodyView from './BodyView'
 import ResourceEvents from './ResourceEvents'
 import AgendaView from './AgendaView'
 import AddMorePopover from './AddMorePopover'
+import HeaderView from './HeaderView'
 import ViewTypes from './ViewTypes'
 import CellUnits from './CellUnits'
 import SummaryPos from './SummaryPos'
@@ -158,7 +160,6 @@ class Scheduler extends Component {
     let defaultValue = `${viewType}${showAgenda ? 1 : 0}${
       isEventPerspective ? 1 : 0
     }`
-    let radioButtonList = this.getCalendarGroup(config)
     //  TODO: 重构列表代码
     let tbodyContent = this.renderBodyContent(
       schedulerData,
@@ -172,17 +173,6 @@ class Scheduler extends Component {
         <Calendar fullscreen={false} onSelect={this.onSelect} />
       </div>
     )
-    //  TODO: 抽离头部组件
-    let schedulerHeader = this.getHeader(
-      config,
-      leftCustomHeader,
-      calendarPopoverEnabled,
-      popover,
-      dateLabel,
-      defaultValue,
-      radioButtonList,
-      rightCustomHeader
-    )
 
     return (
       <table
@@ -192,7 +182,19 @@ class Scheduler extends Component {
       >
         <thead>
           <tr>
-            <td colSpan="2">{schedulerHeader}</td>
+            <td colSpan="2">
+              <HeaderView
+                config={config}
+                calendarPopoverEnabled={false}
+                dateLabel={dateLabel}
+                defaultValue={defaultValue}
+                goBack={this.goBack}
+                goNext={this.goNext}
+                visible={this.state.visible}
+                handleVisibleChange={this.handleVisibleChange}
+                onViewChange={this.onViewChange}
+              />
+            </td>
           </tr>
         </thead>
         <tbody>{tbodyContent}</tbody>
@@ -382,6 +384,7 @@ class Scheduler extends Component {
   }
 
   onViewChange = e => {
+    // TODO: 顶部时间导航这里有bug
     const { onViewChange, schedulerData } = this.props
     let viewType = parseInt(e.target.value.charAt(0))
     let showAgenda = e.target.value.charAt(1) === '1'
@@ -414,93 +417,6 @@ class Scheduler extends Component {
 
     const { onSelectDate, schedulerData } = this.props
     onSelectDate(schedulerData, date)
-  }
-
-  getHeader(
-    config,
-    leftCustomHeader,
-    calendarPopoverEnabled,
-    popover,
-    dateLabel,
-    defaultValue,
-    radioButtonList,
-    rightCustomHeader
-  ) {
-    let schedulerHeader = <div />
-    if (config.headerEnabled) {
-      schedulerHeader = (
-        <Row
-          type="flex"
-          align="middle"
-          justify="space-between"
-          style={{ marginBottom: '24px' }}
-        >
-          {leftCustomHeader}
-          <Col>
-            <div className="header2-text">
-              <Icon
-                type="left"
-                style={{ marginRight: '8px' }}
-                className="icon-nav"
-                onClick={this.goBack}
-              />
-              {calendarPopoverEnabled ? (
-                <Popover
-                  content={popover}
-                  placement="bottom"
-                  trigger="click"
-                  visible={this.state.visible}
-                  onVisibleChange={this.handleVisibleChange}
-                >
-                  <span
-                    className={'header2-text-label'}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    {dateLabel}
-                  </span>
-                </Popover>
-              ) : (
-                <span className={'header2-text-label'}>{dateLabel}</span>
-              )}
-              <Icon
-                type="right"
-                style={{ marginLeft: '8px' }}
-                className="icon-nav"
-                onClick={this.goNext}
-              />
-            </div>
-          </Col>
-          <Col>
-            <RadioGroup
-              defaultValue={defaultValue}
-              size="default"
-              onChange={this.onViewChange}
-            >
-              {radioButtonList}
-            </RadioGroup>
-          </Col>
-          {rightCustomHeader}
-        </Row>
-      )
-    }
-    return schedulerHeader
-  }
-
-  getCalendarGroup(config) {
-    return config.views.map(item => {
-      return (
-        <RadioButton
-          key={`${item.viewType}${item.showAgenda ? 1 : 0}${
-            item.isEventPerspective ? 1 : 0
-          }`}
-          value={`${item.viewType}${item.showAgenda ? 1 : 0}${
-            item.isEventPerspective ? 1 : 0
-          }`}
-        >
-          <span style={{ margin: '0px 8px' }}>{item.viewName}</span>
-        </RadioButton>
-      )
-    })
   }
 
   renderBodyContent(
@@ -638,7 +554,7 @@ class Scheduler extends Component {
                     width: schedulerWidth + contentScrollbarWidth
                   }}
                 >
-                  <HeaderView
+                  <TimeLineView
                     schedulerData={schedulerData}
                     nonAgendaCellHeaderTemplateResolver={
                       nonAgendaCellHeaderTemplateResolver
