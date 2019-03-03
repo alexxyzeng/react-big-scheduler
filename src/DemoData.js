@@ -12,15 +12,15 @@ const DemoData = {
     { id: 'r9', name: 'Resource9' },
     { id: 'r10', name: 'Resource10' },
     { id: 'r11', name: 'Resource11' },
-    { id: 'r12', name: 'Resource12' }
-    // { id: 'r13', name: 'Resource13' },
-    // { id: 'r14', name: 'Resource14' },
-    // { id: 'r15', name: 'Resource15' },
-    // { id: 'r16', name: 'Resource16' },
-    // { id: 'r17', name: 'Resource17' },
-    // { id: 'r18', name: 'Resource18' },
-    // { id: 'r19', name: 'Resource19' },
-    // { id: 'r20', name: 'Resource20' },
+    { id: 'r12', name: 'Resource12' },
+    { id: 'r13', name: 'Resource13' },
+    { id: 'r14', name: 'Resource14' },
+    { id: 'r15', name: 'Resource15' },
+    { id: 'r16', name: 'Resource16' },
+    { id: 'r17', name: 'Resource17' },
+    { id: 'r18', name: 'Resource18' },
+    { id: 'r19', name: 'Resource19' },
+    { id: 'r20', name: 'Resource20' }
     // { id: 'r21', name: 'Resource21' },
     // { id: 'r22', name: 'Resource22' },
     // { id: 'r23', name: 'Resource23' },
@@ -440,6 +440,6 @@ const DemoData = {
       type: 3
     }
   ]
-};
+}
 
-export default DemoData;
+export default DemoData

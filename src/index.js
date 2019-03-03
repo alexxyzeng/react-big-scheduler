@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { PropTypes } from 'prop-types';
+import React, { Component } from 'react'
+import { PropTypes } from 'prop-types'
 // Col, Row and Icon do not have their own less files for styling. They use
 // rules declared in antd's global css. If these styles are imported directly
 // from within antd, they'll include, for instance, reset rules. These will
@@ -24,53 +24,53 @@ import { PropTypes } from 'prop-types';
 // The next components have their own specific stylesheets which we import
 // separately here to avoid importing from files which have required the global
 // antd styles.
-import Col from 'antd/lib/col';
-import Row from 'antd/lib/row';
-import Icon from 'antd/lib/icon';
-import 'antd/lib/select/style/index.css';
-import 'antd/lib/grid/style/index.css';
-import Radio from 'antd/lib/radio';
-import 'antd/lib/radio/style/index.css';
-import Popover from 'antd/lib/popover';
-import 'antd/lib/popover/style/index.css';
-import Calendar from 'antd/lib/calendar';
-import 'antd/lib/calendar/style/index.css';
-import EventItem from './EventItem';
-import DnDSource from './DnDSource';
-import DnDContext from './DnDContext';
-import ResourceView from './ResourceView';
-import HeaderView from './TimeLineView';
-import BodyView from './BodyView';
-import ResourceEvents from './ResourceEvents';
-import AgendaView from './AgendaView';
-import AddMorePopover from './AddMorePopover';
-import ViewTypes from './ViewTypes';
-import CellUnits from './CellUnits';
-import SummaryPos from './SummaryPos';
-import SchedulerData from './SchedulerData';
-import DemoData from './DemoData';
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
+import Col from 'antd/lib/col'
+import Row from 'antd/lib/row'
+import Icon from 'antd/lib/icon'
+import 'antd/lib/select/style/index.css'
+import 'antd/lib/grid/style/index.css'
+import Radio from 'antd/lib/radio'
+import 'antd/lib/radio/style/index.css'
+import Popover from 'antd/lib/popover'
+import 'antd/lib/popover/style/index.css'
+import Calendar from 'antd/lib/calendar'
+import 'antd/lib/calendar/style/index.css'
+import EventItem from './EventItem'
+import DnDSource from './DnDSource'
+import DnDContext from './DnDContext'
+import ResourceView from './ResourceView'
+import HeaderView from './TimeLineView'
+import BodyView from './BodyView'
+import ResourceEvents from './ResourceEvents'
+import AgendaView from './AgendaView'
+import AddMorePopover from './AddMorePopover'
+import ViewTypes from './ViewTypes'
+import CellUnits from './CellUnits'
+import SummaryPos from './SummaryPos'
+import SchedulerData from './SchedulerData'
+import DemoData from './DemoData'
+const RadioButton = Radio.Button
+const RadioGroup = Radio.Group
 
 class Scheduler extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
-    const { schedulerData, dndSources, size } = props;
-    let sources = [];
+    const { schedulerData, dndSources, size } = props
+    let sources = []
     sources.push(
       new DnDSource(props => {
-        return props.eventItem;
+        return props.eventItem
       }, EventItem)
-    );
+    )
     if (dndSources != undefined && dndSources.length > 0) {
-      sources = [...sources, ...dndSources];
+      sources = [...sources, ...dndSources]
     }
-    let dndContext = new DnDContext(sources, ResourceEvents);
+    let dndContext = new DnDContext(sources, ResourceEvents)
 
-    this.currentArea = -1;
+    this.currentArea = -1
     // TODO: 增加设置宽度的api
-    schedulerData.setDocumentSize(size);
+    schedulerData.setDocumentSize(size)
     this.state = {
       visible: false,
       dndContext: dndContext,
@@ -82,35 +82,36 @@ class Scheduler extends Component {
 
       documentWidth: document.documentElement.clientWidth,
       documentHeight: document.documentElement.clientHeight
-    };
+    }
 
-    this.scrollTop = 0;
-    this.scrollLeft = 0;
+    this.scrollTop = 0
+    this.scrollLeft = 0
 
     if (schedulerData.isSchedulerResponsive()) {
-      window.onresize = this.onWindowResize;
+      window.onresize = this.onWindowResize
     }
   }
 
   //  TODO: 修改resize事件
   onWindowResize = e => {
-    const { schedulerData } = this.props;
-    schedulerData._setDocumentWidth(document.documentElement.clientWidth);
+    const { schedulerData } = this.props
+    schedulerData._setDocumentWidth(document.documentElement.clientWidth)
     this.setState({
       documentWidth: document.documentElement.clientWidth,
       documentHeight: document.documentElement.clientHeight
-    });
-  };
+    })
+  }
 
   componentDidMount(props, state) {
-    this.resolveScrollbarSize();
+    this.resolveScrollbarSize()
   }
 
   componentDidUpdate(props, state) {
-    this.resolveScrollbarSize();
+    this.resolveScrollbarSize()
 
-    const { schedulerData } = this.props;
-    const { localeMoment, behaviors } = schedulerData;
+    const { schedulerData } = this.props
+    schedulerData.getCurrentTimePosition()
+    const { localeMoment, behaviors } = schedulerData
     if (
       schedulerData.getScrollToSpecialMoment() &&
       !!behaviors.getScrollSpecialMomentFunc
@@ -125,17 +126,17 @@ class Scheduler extends Component {
             schedulerData,
             start,
             end
-          );
+          )
         if (specialMoment >= start && specialMoment <= end) {
-          let index = 0;
+          let index = 0
           schedulerData.headers.forEach(item => {
-            let header = localeMoment(item.time);
-            if (specialMoment >= header) index++;
-          });
+            let header = localeMoment(item.time)
+            if (specialMoment >= header) index++
+          })
           this.schedulerContent.scrollLeft =
-            (index - 1) * schedulerData.getContentCellWidth();
+            (index - 1) * schedulerData.getContentCellWidth()
 
-          schedulerData.setScrollToSpecialMoment(false);
+          schedulerData.setScrollToSpecialMoment(false)
         }
       }
     }
@@ -148,30 +149,30 @@ class Scheduler extends Component {
       rightCustomHeader,
       nonAgendaCellHeaderTemplateResolver,
       size: { height }
-    } = this.props;
-    const { viewType, showAgenda, isEventPerspective, config } = schedulerData;
-    const width = schedulerData.getSchedulerWidth();
-    const calendarPopoverEnabled = config.calendarPopoverEnabled;
+    } = this.props
+    const { viewType, showAgenda, isEventPerspective, config } = schedulerData
+    const width = schedulerData.getSchedulerWidth()
+    const calendarPopoverEnabled = config.calendarPopoverEnabled
     //  设置时间标签
-    let dateLabel = schedulerData.getDateLabel();
+    let dateLabel = schedulerData.getDateLabel()
     //  设置时间切换按钮
     let defaultValue = `${viewType}${showAgenda ? 1 : 0}${
       isEventPerspective ? 1 : 0
-    }`;
-    let radioButtonList = this.getCalendarGroup(config);
+    }`
+    let radioButtonList = this.getCalendarGroup(config)
     //  TODO: 重构列表代码
     let tbodyContent = this.renderBodyContent(
       schedulerData,
       nonAgendaCellHeaderTemplateResolver,
       width,
       height
-    );
+    )
 
     let popover = (
       <div className="popover-calendar">
         <Calendar fullscreen={false} onSelect={this.onSelect} />
       </div>
-    );
+    )
     //  TODO: 抽离头部组件
     let schedulerHeader = this.getHeader(
       config,
@@ -182,7 +183,7 @@ class Scheduler extends Component {
       defaultValue,
       radioButtonList,
       rightCustomHeader
-    );
+    )
 
     return (
       <table
@@ -197,132 +198,133 @@ class Scheduler extends Component {
         </thead>
         <tbody>{tbodyContent}</tbody>
       </table>
-    );
+    )
   }
 
   resolveScrollbarSize = () => {
-    const { schedulerData } = this.props;
+    const { schedulerData } = this.props
     let contentScrollbarHeight = 17,
       contentScrollbarWidth = 17,
       resourceScrollbarHeight = 17,
       resourceScrollbarWidth = 17,
-      contentHeight = schedulerData.getSchedulerContentDesiredHeight();
+      contentHeight = schedulerData.getSchedulerContentDesiredHeight()
     if (!!this.schedulerContent) {
       contentScrollbarHeight =
-        this.schedulerContent.offsetHeight - this.schedulerContent.clientHeight;
+        this.schedulerContent.offsetHeight - this.schedulerContent.clientHeight
       contentScrollbarWidth =
-        this.schedulerContent.offsetWidth - this.schedulerContent.clientWidth;
+        this.schedulerContent.offsetWidth - this.schedulerContent.clientWidth
     }
     if (!!this.schedulerResource) {
       resourceScrollbarHeight =
         this.schedulerResource.offsetHeight -
-        this.schedulerResource.clientHeight;
+        this.schedulerResource.clientHeight
       resourceScrollbarWidth =
-        this.schedulerResource.offsetWidth - this.schedulerResource.clientWidth;
+        this.schedulerResource.offsetWidth - this.schedulerResource.clientWidth
     }
     if (
       !!this.schedulerContentBgTable &&
       !!this.schedulerContentBgTable.offsetHeight
     ) {
-      contentHeight = this.schedulerContentBgTable.offsetHeight;
+      contentHeight = this.schedulerContentBgTable.offsetHeight
     }
 
-    let tmpState = {};
-    let needSet = false;
+    let tmpState = {}
+    let needSet = false
     if (contentScrollbarHeight != this.state.contentScrollbarHeight) {
       tmpState = {
         ...tmpState,
         contentScrollbarHeight: contentScrollbarHeight
-      };
-      needSet = true;
+      }
+      needSet = true
     }
     if (contentScrollbarWidth != this.state.contentScrollbarWidth) {
-      tmpState = { ...tmpState, contentScrollbarWidth: contentScrollbarWidth };
-      needSet = true;
+      tmpState = { ...tmpState, contentScrollbarWidth: contentScrollbarWidth }
+      needSet = true
     }
     if (contentHeight != this.state.contentHeight) {
-      tmpState = { ...tmpState, contentHeight: contentHeight };
-      needSet = true;
+      tmpState = { ...tmpState, contentHeight: contentHeight }
+      needSet = true
     }
     if (resourceScrollbarHeight != this.state.resourceScrollbarHeight) {
       tmpState = {
         ...tmpState,
         resourceScrollbarHeight: resourceScrollbarHeight
-      };
-      needSet = true;
+      }
+      needSet = true
     }
     if (resourceScrollbarWidth != this.state.resourceScrollbarWidth) {
       tmpState = {
         ...tmpState,
         resourceScrollbarWidth: resourceScrollbarWidth
-      };
-      needSet = true;
+      }
+      needSet = true
     }
-    if (needSet) this.setState(tmpState);
-  };
+    if (needSet) this.setState(tmpState)
+  }
 
   schedulerHeadRef = element => {
-    this.schedulerHead = element;
-  };
+    this.schedulerHead = element
+  }
 
   onSchedulerHeadMouseOver = () => {
-    this.currentArea = 2;
-  };
+    this.currentArea = 2
+  }
 
   onSchedulerHeadMouseOut = () => {
-    this.currentArea = -1;
-  };
+    this.currentArea = -1
+  }
 
   onSchedulerHeadScroll = (proxy, event) => {
     if (
       (this.currentArea === 2 || this.currentArea === -1) &&
       this.schedulerContent.scrollLeft != this.schedulerHead.scrollLeft
-    )
-      this.schedulerContent.scrollLeft = this.schedulerHead.scrollLeft;
-  };
+    ) {
+      this.schedulerContent.scrollLeft = this.schedulerHead.scrollLeft
+    }
+  }
 
   schedulerResourceRef = element => {
-    this.schedulerResource = element;
-  };
+    this.schedulerResource = element
+  }
 
   onSchedulerResourceMouseOver = () => {
-    this.currentArea = 1;
-  };
+    this.currentArea = 1
+  }
 
   onSchedulerResourceMouseOut = () => {
-    this.currentArea = -1;
-  };
+    this.currentArea = -1
+  }
 
   onSchedulerResourceScroll = (proxy, event) => {
     if (
       (this.currentArea === 1 || this.currentArea === -1) &&
       this.schedulerContent.scrollTop != this.schedulerResource.scrollTop
     )
-      this.schedulerContent.scrollTop = this.schedulerResource.scrollTop;
-  };
+      this.schedulerContent.scrollTop = this.schedulerResource.scrollTop
+  }
 
   schedulerContentRef = element => {
-    this.schedulerContent = element;
-  };
+    this.schedulerContent = element
+  }
 
   schedulerContentBgTableRef = element => {
-    this.schedulerContentBgTable = element;
-  };
+    this.schedulerContentBgTable = element
+  }
 
   onSchedulerContentMouseOver = () => {
-    this.currentArea = 0;
-  };
+    this.currentArea = 0
+  }
 
   onSchedulerContentMouseOut = () => {
-    this.currentArea = -1;
-  };
+    this.currentArea = -1
+  }
 
   onSchedulerContentScroll = (proxy, event) => {
     if (this.currentArea === 0 || this.currentArea === -1) {
       if (this.schedulerHead.scrollLeft != this.schedulerContent.scrollLeft)
-        this.schedulerHead.scrollLeft = this.schedulerContent.scrollLeft;
+        this.schedulerHead.scrollLeft = this.schedulerContent.scrollLeft
       if (this.schedulerResource.scrollTop != this.schedulerContent.scrollTop)
-        this.schedulerResource.scrollTop = this.schedulerContent.scrollTop;
+        this.schedulerResource.scrollTop = this.schedulerContent.scrollTop
     }
 
     const {
@@ -331,15 +333,15 @@ class Scheduler extends Component {
       onScrollRight,
       onScrollTop,
       onScrollBottom
-    } = this.props;
-    const { scrollLeft, scrollTop } = this;
+    } = this.props
+    const { scrollLeft, scrollTop } = this
     if (this.schedulerContent.scrollLeft !== scrollLeft) {
       if (this.schedulerContent.scrollLeft === 0 && onScrollLeft != undefined) {
         onScrollLeft(
           schedulerData,
           this.schedulerContent,
           this.schedulerContent.scrollWidth - this.schedulerContent.clientWidth
-        );
+        )
       }
       if (
         this.schedulerContent.scrollLeft ===
@@ -351,7 +353,7 @@ class Scheduler extends Component {
           schedulerData,
           this.schedulerContent,
           this.schedulerContent.scrollWidth - this.schedulerContent.clientWidth
-        );
+        )
       }
     } else if (this.schedulerContent.scrollTop !== scrollTop) {
       if (this.schedulerContent.scrollTop === 0 && onScrollTop != undefined) {
@@ -360,7 +362,7 @@ class Scheduler extends Component {
           this.schedulerContent,
           this.schedulerContent.scrollHeight -
             this.schedulerContent.clientHeight
-        );
+        )
       }
       if (
         this.schedulerContent.scrollTop ===
@@ -373,47 +375,47 @@ class Scheduler extends Component {
           this.schedulerContent,
           this.schedulerContent.scrollHeight -
             this.schedulerContent.clientHeight
-        );
+        )
       }
     }
-    this.scrollLeft = scrollLeft;
-    this.scrollTop = scrollTop;
-  };
+    this.scrollLeft = scrollLeft
+    this.scrollTop = scrollTop
+  }
 
   onViewChange = e => {
-    const { onViewChange, schedulerData } = this.props;
-    let viewType = parseInt(e.target.value.charAt(0));
-    let showAgenda = e.target.value.charAt(1) === '1';
-    let isEventPerspective = e.target.value.charAt(2) === '1';
+    const { onViewChange, schedulerData } = this.props
+    let viewType = parseInt(e.target.value.charAt(0))
+    let showAgenda = e.target.value.charAt(1) === '1'
+    let isEventPerspective = e.target.value.charAt(2) === '1'
     onViewChange(schedulerData, {
       viewType: viewType,
       showAgenda: showAgenda,
       isEventPerspective: isEventPerspective
-    });
-  };
+    })
+  }
 
   goNext = () => {
-    const { nextClick, schedulerData } = this.props;
-    nextClick(schedulerData);
-  };
+    const { nextClick, schedulerData } = this.props
+    nextClick(schedulerData)
+  }
 
   goBack = () => {
-    const { prevClick, schedulerData } = this.props;
-    prevClick(schedulerData);
-  };
+    const { prevClick, schedulerData } = this.props
+    prevClick(schedulerData)
+  }
 
   handleVisibleChange = visible => {
-    this.setState({ visible });
-  };
+    this.setState({ visible })
+  }
 
   onSelect = date => {
     this.setState({
       visible: false
-    });
+    })
 
-    const { onSelectDate, schedulerData } = this.props;
-    onSelectDate(schedulerData, date);
-  };
+    const { onSelectDate, schedulerData } = this.props
+    onSelectDate(schedulerData, date)
+  }
 
   getHeader(
     config,
@@ -425,7 +427,7 @@ class Scheduler extends Component {
     radioButtonList,
     rightCustomHeader
   ) {
-    let schedulerHeader = <div />;
+    let schedulerHeader = <div />
     if (config.headerEnabled) {
       schedulerHeader = (
         <Row
@@ -480,9 +482,9 @@ class Scheduler extends Component {
           </Col>
           {rightCustomHeader}
         </Row>
-      );
+      )
     }
-    return schedulerHeader;
+    return schedulerHeader
   }
 
   getCalendarGroup(config) {
@@ -498,8 +500,8 @@ class Scheduler extends Component {
         >
           <span style={{ margin: '0px 8px' }}>{item.viewName}</span>
         </RadioButton>
-      );
-    });
+      )
+    })
   }
 
   renderBodyContent(
@@ -508,18 +510,18 @@ class Scheduler extends Component {
     width,
     height
   ) {
-    const { renderData, showAgenda, config } = schedulerData;
+    const { renderData, showAgenda, config } = schedulerData
     if (showAgenda) {
-      return <AgendaView {...this.props} />;
+      return <AgendaView {...this.props} />
     }
-    let tbodyContent = <tr />;
+    let tbodyContent = <tr />
     //  TODO: 左侧导航信息列表，研究如何自定义内容和宽高
     //   let resourceTableWidth = schedulerData.getResourceTableWidth();
-    let resourceTableWidth = 320;
-    let schedulerContainerWidth = width - resourceTableWidth + 1;
-    let schedulerWidth = schedulerData.getContentTableWidth() - 1;
-    let DndResourceEvents = this.state.dndContext.getDropTarget();
-    let eventDndSource = this.state.dndContext.getDndSource();
+    let resourceTableWidth = 320
+    let schedulerContainerWidth = width - resourceTableWidth + 1
+    let schedulerWidth = schedulerData.getContentTableWidth() - 1
+    let DndResourceEvents = this.state.dndContext.getDropTarget()
+    let eventDndSource = this.state.dndContext.getDndSource()
     let resourceEventsList = renderData.map(item => {
       return (
         <DndResourceEvents
@@ -528,45 +530,46 @@ class Scheduler extends Component {
           resourceEvents={item}
           dndSource={eventDndSource}
         />
-      );
-    });
+      )
+    })
     const {
       contentScrollbarHeight,
       contentScrollbarWidth,
       resourceScrollbarHeight,
       resourceScrollbarWidth,
       contentHeight
-    } = this.state;
+    } = this.state
     let resourcePaddingBottom =
-      resourceScrollbarHeight === 0 ? contentScrollbarHeight : 0;
+      resourceScrollbarHeight === 0 ? contentScrollbarHeight : 0
     let contentPaddingBottom =
-      contentScrollbarHeight === 0 ? resourceScrollbarHeight : 0;
+      contentScrollbarHeight === 0 ? resourceScrollbarHeight : 0
     let schedulerContentStyle = {
       overflow: 'auto',
       margin: '0px',
       position: 'relative',
       paddingBottom: contentPaddingBottom
-    };
+    }
     let resourceContentStyle = {
       overflowX: 'auto',
       overflowY: 'auto',
       width: resourceTableWidth + resourceScrollbarWidth - 2,
       margin: `0px -${contentScrollbarWidth}px 0px 0px`
-    };
+    }
     if (height > 0) {
       schedulerContentStyle = {
         ...schedulerContentStyle,
         height: height - config.tableHeaderHeight
-      };
+      }
       resourceContentStyle = {
         ...resourceContentStyle,
         height: height - config.tableHeaderHeight
-      };
+      }
     }
     let resourceName = schedulerData.isEventPerspective
       ? config.taskName
-      : config.resourceName;
+      : config.resourceName
     tbodyContent = (
+      // 左侧列表需要增加功能
       <tr>
         <td style={{ width: resourceTableWidth, verticalAlign: 'top' }}>
           <div className="resource-view">
@@ -671,15 +674,15 @@ class Scheduler extends Component {
           </div>
         </td>
       </tr>
-    );
-    return tbodyContent;
+    )
+    return tbodyContent
   }
 
   //  背景图
   /* TODO: 实现自定义功能：选中时间范围等等 */
 
   renderBackgroundView = schedulerWidth => {
-    const { schedulerData } = this.props;
+    const { schedulerData } = this.props
 
     return (
       <BodyView
@@ -687,12 +690,12 @@ class Scheduler extends Component {
         schedulerData={schedulerData}
         type={schedulerData.viewType}
       />
-    );
-  };
+    )
+  }
 }
 
-export const DATE_FORMAT = 'YYYY-MM-DD';
-export const DATETIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+export const DATE_FORMAT = 'YYYY-MM-DD'
+export const DATETIME_FORMAT = 'YYYY-MM-DD HH:mm:ss'
 export {
   SchedulerData,
   ViewTypes,
@@ -702,8 +705,8 @@ export {
   DnDContext,
   AddMorePopover,
   DemoData
-};
-export default Scheduler;
+}
+export default Scheduler
 
 Scheduler.propTypes = {
   //  列表数据
@@ -754,4 +757,4 @@ Scheduler.propTypes = {
   //  宽高
   size: PropTypes.object,
   showTimeIndicator: PropTypes.bool
-};
+}
