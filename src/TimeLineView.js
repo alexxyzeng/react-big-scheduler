@@ -22,8 +22,6 @@ class HeaderView extends React.PureComponent {
       headers.forEach((item, index) => {
         if (index % minuteStepsInHour === 0) {
           let datetime = localeMoment(item.time)
-          // eslint-disable-next-line no-unused-vars
-          const isCurrentTime = datetime.isSame(new Date(), 'hour')
           style = item.nonWorkingTime
             ? {
               width: cellWidth * minuteStepsInHour,

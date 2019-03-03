@@ -69,7 +69,6 @@ class Scheduler extends Component {
     let dndContext = new DnDContext(sources, ResourceEvents)
 
     this.currentArea = -1
-    // TODO: 增加设置宽度的api
     schedulerData.setDocumentSize(size)
     this.state = {
       visible: false,
@@ -208,13 +207,13 @@ class Scheduler extends Component {
       resourceScrollbarHeight = 17,
       resourceScrollbarWidth = 17,
       contentHeight = schedulerData.getSchedulerContentDesiredHeight()
-    if (!!this.schedulerContent) {
+    if (this.schedulerContent) {
       contentScrollbarHeight =
         this.schedulerContent.offsetHeight - this.schedulerContent.clientHeight
       contentScrollbarWidth =
         this.schedulerContent.offsetWidth - this.schedulerContent.clientWidth
     }
-    if (!!this.schedulerResource) {
+    if (this.schedulerResource) {
       resourceScrollbarHeight =
         this.schedulerResource.offsetHeight -
         this.schedulerResource.clientHeight
