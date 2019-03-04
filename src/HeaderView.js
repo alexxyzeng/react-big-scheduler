@@ -1,21 +1,20 @@
 import React from 'react'
-import { Row, Col, Popover, Icon, Radio } from 'antd'
+import { Row, Col, Popover, Icon, Radio, Calendar } from 'antd'
 const RadioButton = Radio.Button
 const RadioGroup = Radio.Group
 
 function HeaderView({
   config,
-  calendarPopoverEnabled,
-  popover,
   dateLabel,
   defaultValue,
   goBack,
   goNext,
   visible,
   handleVisibleChange,
-  onViewChange
+  onViewChange,
+  onSelect
 }) {
-  const { headerEnabled, views } = config
+  const { headerEnabled, views, calendarPopoverEnabled } = config
 
   if (!headerEnabled) {
     return <div />
@@ -38,7 +37,11 @@ function HeaderView({
           />
           {calendarPopoverEnabled ? (
             <Popover
-              content={popover}
+              content={
+                <div className="popover-calendar">
+                  <Calendar fullscreen={false} onSelect={onSelect} />
+                </div>
+              }
               placement="bottom"
               trigger="click"
               visible={visible}

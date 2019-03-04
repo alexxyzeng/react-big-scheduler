@@ -287,8 +287,8 @@ export default class SchedulerData {
         : 0
     return this.isSchedulerResponsive()
       ? parseInt(
-          (baseWidth * Number(this.config.schedulerWidth.slice(0, -1))) / 100
-        )
+        (baseWidth * Number(this.config.schedulerWidth.slice(0, -1))) / 100
+      )
       : this.config.schedulerWidth
   }
 
@@ -297,8 +297,8 @@ export default class SchedulerData {
     let schedulerWidth = this.getSchedulerWidth()
     let resourceTableWidth = this.isResourceViewResponsive()
       ? parseInt(
-          (schedulerWidth * Number(resourceTableConfigWidth.slice(0, -1))) / 100
-        )
+        (schedulerWidth * Number(resourceTableConfigWidth.slice(0, -1))) / 100
+      )
       : resourceTableConfigWidth
     if (
       this.isSchedulerResponsive() &&
@@ -313,8 +313,8 @@ export default class SchedulerData {
     let schedulerWidth = this.getSchedulerWidth()
     return this.isContentViewResponsive()
       ? parseInt(
-          (schedulerWidth * Number(contentCellConfigWidth.slice(0, -1))) / 100
-        )
+        (schedulerWidth * Number(contentCellConfigWidth.slice(0, -1))) / 100
+      )
       : contentCellConfigWidth
   }
 
@@ -365,14 +365,14 @@ export default class SchedulerData {
     return this.viewType === ViewTypes.Week
       ? this.config.weekMaxEvents
       : this.viewType === ViewTypes.Day
-      ? this.config.dayMaxEvents
-      : this.viewType === ViewTypes.Month
-      ? this.config.monthMaxEvents
-      : this.viewType === ViewTypes.Year
-      ? this.config.yearMaxEvents
-      : this.viewType === ViewTypes.Quarter
-      ? this.config.quarterMaxEvents
-      : this.config.customMaxEvents
+        ? this.config.dayMaxEvents
+        : this.viewType === ViewTypes.Month
+          ? this.config.monthMaxEvents
+          : this.viewType === ViewTypes.Year
+            ? this.config.yearMaxEvents
+            : this.viewType === ViewTypes.Quarter
+              ? this.config.quarterMaxEvents
+              : this.config.customMaxEvents
   }
 
   getDateLabel() {
@@ -453,28 +453,28 @@ export default class SchedulerData {
     return this.viewType === ViewTypes.Week
       ? this.config.weekResourceTableWidth
       : this.viewType === ViewTypes.Day
-      ? this.config.dayResourceTableWidth
-      : this.viewType === ViewTypes.Month
-      ? this.config.monthResourceTableWidth
-      : this.viewType === ViewTypes.Year
-      ? this.config.yearResourceTableWidth
-      : this.viewType === ViewTypes.Quarter
-      ? this.config.quarterResourceTableWidth
-      : this.config.customResourceTableWidth
+        ? this.config.dayResourceTableWidth
+        : this.viewType === ViewTypes.Month
+          ? this.config.monthResourceTableWidth
+          : this.viewType === ViewTypes.Year
+            ? this.config.yearResourceTableWidth
+            : this.viewType === ViewTypes.Quarter
+              ? this.config.quarterResourceTableWidth
+              : this.config.customResourceTableWidth
   }
 
   getContentCellConfigWidth() {
     return this.viewType === ViewTypes.Week
       ? this.config.weekCellWidth
       : this.viewType === ViewTypes.Day
-      ? this.config.dayCellWidth
-      : this.viewType === ViewTypes.Month
-      ? this.config.monthCellWidth
-      : this.viewType === ViewTypes.Year
-      ? this.config.yearCellWidth
-      : this.viewType === ViewTypes.Quarter
-      ? this.config.quarterCellWidth
-      : this.config.customCellWidth
+        ? this.config.dayCellWidth
+        : this.viewType === ViewTypes.Month
+          ? this.config.monthCellWidth
+          : this.viewType === ViewTypes.Year
+            ? this.config.yearCellWidth
+            : this.viewType === ViewTypes.Quarter
+              ? this.config.quarterCellWidth
+              : this.config.customCellWidth
   }
 
   getContentCellHeight() {
@@ -598,11 +598,11 @@ export default class SchedulerData {
       this.startDate =
         date != undefined
           ? this.localeMoment(date)
-              .startOf('week')
-              .format(DATE_FORMAT)
+            .startOf('week')
+            .format(DATE_FORMAT)
           : this.localeMoment(this.startDate)
-              .add(num, 'weeks')
-              .format(DATE_FORMAT)
+            .add(num, 'weeks')
+            .format(DATE_FORMAT)
       this.endDate = this.localeMoment(this.startDate)
         .endOf('week')
         .format(DATE_FORMAT)
@@ -611,18 +611,18 @@ export default class SchedulerData {
         date != undefined
           ? this.selectDate
           : this.localeMoment(this.startDate)
-              .add(num, 'days')
-              .format(DATE_FORMAT)
+            .add(num, 'days')
+            .format(DATE_FORMAT)
       this.endDate = this.startDate
     } else if (this.viewType === ViewTypes.Month) {
       this.startDate =
         date != undefined
           ? this.localeMoment(date)
-              .startOf('month')
-              .format(DATE_FORMAT)
+            .startOf('month')
+            .format(DATE_FORMAT)
           : this.localeMoment(this.startDate)
-              .add(num, 'months')
-              .format(DATE_FORMAT)
+            .add(num, 'months')
+            .format(DATE_FORMAT)
       this.endDate = this.localeMoment(this.startDate)
         .endOf('month')
         .format(DATE_FORMAT)
@@ -630,11 +630,11 @@ export default class SchedulerData {
       this.startDate =
         date != undefined
           ? this.localeMoment(date)
-              .startOf('quarter')
-              .format(DATE_FORMAT)
+            .startOf('quarter')
+            .format(DATE_FORMAT)
           : this.localeMoment(this.startDate)
-              .add(num, 'quarters')
-              .format(DATE_FORMAT)
+            .add(num, 'quarters')
+            .format(DATE_FORMAT)
       this.endDate = this.localeMoment(this.startDate)
         .endOf('quarter')
         .format(DATE_FORMAT)
@@ -642,11 +642,11 @@ export default class SchedulerData {
       this.startDate =
         date != undefined
           ? this.localeMoment(date)
-              .startOf('year')
-              .format(DATE_FORMAT)
+            .startOf('year')
+            .format(DATE_FORMAT)
           : this.localeMoment(this.startDate)
-              .add(num, 'years')
-              .format(DATE_FORMAT)
+            .add(num, 'years')
+            .format(DATE_FORMAT)
       this.endDate = this.localeMoment(this.startDate)
         .endOf('year')
         .format(DATE_FORMAT)
@@ -731,19 +731,19 @@ export default class SchedulerData {
       ? this.viewType === ViewTypes.Week
         ? start.add(1, 'weeks').format(DATETIME_FORMAT)
         : this.viewType === ViewTypes.Day
-        ? start.add(1, 'days').format(DATETIME_FORMAT)
-        : this.viewType === ViewTypes.Month
-        ? start.add(1, 'months').format(DATETIME_FORMAT)
-        : this.viewType === ViewTypes.Year
-        ? start.add(1, 'years').format(DATETIME_FORMAT)
-        : this.viewType === ViewTypes.Quarter
-        ? start.add(1, 'quarters').format(DATETIME_FORMAT)
-        : this.localeMoment(this.endDate)
-            .add(1, 'days')
-            .format(DATETIME_FORMAT)
+          ? start.add(1, 'days').format(DATETIME_FORMAT)
+          : this.viewType === ViewTypes.Month
+            ? start.add(1, 'months').format(DATETIME_FORMAT)
+            : this.viewType === ViewTypes.Year
+              ? start.add(1, 'years').format(DATETIME_FORMAT)
+              : this.viewType === ViewTypes.Quarter
+                ? start.add(1, 'quarters').format(DATETIME_FORMAT)
+                : this.localeMoment(this.endDate)
+                  .add(1, 'days')
+                  .format(DATETIME_FORMAT)
       : this.cellUnit === CellUnits.Hour
-      ? start.add(this.config.minuteStep, 'minutes').format(DATETIME_FORMAT)
-      : start.add(1, 'days').format(DATETIME_FORMAT)
+        ? start.add(this.config.minuteStep, 'minutes').format(DATETIME_FORMAT)
+        : start.add(1, 'days').format(DATETIME_FORMAT)
     return {
       time: header.time,
       nonWorkingTime: header.nonWorkingTime,
@@ -838,9 +838,9 @@ export default class SchedulerData {
         spanEnd =
           this.cellUnit === CellUnits.Hour
             ? this.localeMoment(header.time).add(
-                this.config.minuteStep,
-                'minutes'
-              )
+              this.config.minuteStep,
+              'minutes'
+            )
             : this.localeMoment(header.time).add(1, 'days')
 
       if (spanStart < end && spanEnd > start) {

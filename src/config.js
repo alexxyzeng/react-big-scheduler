@@ -1,5 +1,5 @@
-import ViewTypes from './ViewTypes';
-import SummaryPos from './SummaryPos';
+import ViewTypes from './ViewTypes'
+import SummaryPos from './SummaryPos'
 
 export default {
   schedulerWidth: '100%',
@@ -61,7 +61,6 @@ export default {
   headerEnabled: true,
   displayWeekend: true,
   relativeMove: true,
-  //  TODO: 增加自定义列表数
   resourceName: '会议室列表',
   taskName: 'Task Name',
   agendaViewHeader: 'Agenda',
@@ -104,4 +103,4 @@ export default {
     //   isEventPerspective: false
     // }
   ]
-};
+}

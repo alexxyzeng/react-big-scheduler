@@ -111,7 +111,6 @@ class Scheduler extends Component {
     this.resolveScrollbarSize()
 
     const { schedulerData } = this.props
-    schedulerData.getCurrentTimePosition()
     const { localeMoment, behaviors } = schedulerData
     if (
       schedulerData.getScrollToSpecialMoment() &&
@@ -152,8 +151,7 @@ class Scheduler extends Component {
       size: { height }
     } = this.props
     const { viewType, showAgenda, isEventPerspective, config } = schedulerData
-    const width = schedulerData.getSchedulerWidth()
-    const calendarPopoverEnabled = config.calendarPopoverEnabled
+    const schedulerWidth = schedulerData.getSchedulerWidth()
     //  设置时间标签
     let dateLabel = schedulerData.getDateLabel()
     //  设置时间切换按钮
@@ -164,28 +162,21 @@ class Scheduler extends Component {
     let tbodyContent = this.renderBodyContent(
       schedulerData,
       nonAgendaCellHeaderTemplateResolver,
-      width,
+      schedulerWidth,
       height
-    )
-
-    let popover = (
-      <div className="popover-calendar">
-        <Calendar fullscreen={false} onSelect={this.onSelect} />
-      </div>
     )
 
     return (
       <table
         id="RBS-Scheduler-root"
         className="scheduler"
-        style={{ width: `${width}px` }}
+        style={{ width: `${schedulerWidth}px` }}
       >
         <thead>
           <tr>
             <td colSpan="2">
               <HeaderView
                 config={config}
-                calendarPopoverEnabled={false}
                 dateLabel={dateLabel}
                 defaultValue={defaultValue}
                 goBack={this.goBack}
@@ -193,6 +184,7 @@ class Scheduler extends Component {
                 visible={this.state.visible}
                 handleVisibleChange={this.handleVisibleChange}
                 onViewChange={this.onViewChange}
+                onSelect={this.onSelect}
               />
             </td>
           </tr>
