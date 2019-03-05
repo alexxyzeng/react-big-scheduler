@@ -170,11 +170,17 @@ table.scheduler-table tr:last-child td {
 .event-item {
   /* margin: 1px 0; */
   width: 100%;
+
+  /* padding-right: 20px !important; */
+}
+
+.event-item span {
+  display: block;
+  line-height: 18px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   color: #fff;
-  /* padding-right: 20px !important; */
 }
 
 .overflow-text {
