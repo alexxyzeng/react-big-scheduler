@@ -1,82 +1,101 @@
-import React, { Component } from 'react';
-import { PropTypes } from 'prop-types';
+import React, { PureComponent } from 'react'
+import PropTypes from 'prop-types'
 
-class ResourceView extends Component {
+import ResourceListView from './ResourceListView'
+
+class ResourceView extends PureComponent {
   constructor(props) {
-    super(props);
+    super(props)
+    const {
+      resourceTableWidth,
+      resourceScrollbarWidth,
+      contentScrollbarWidth
+    } = props
+    this.resourceContentStyle = {
+      overflowX: 'auto',
+      overflowY: 'auto',
+      width: resourceTableWidth + resourceScrollbarWidth - 2,
+      margin: `0px -${contentScrollbarWidth}px 0px 0px`
+    }
   }
-
-  static propTypes = {
-    schedulerData: PropTypes.object.isRequired,
-    contentScrollbarHeight: PropTypes.number.isRequired,
-    slotClickedFunc: PropTypes.func,
-    slotItemTemplateResolver: PropTypes.func
-  };
 
   render() {
     const {
-      schedulerData,
+      resourceTableWidth,
+      tableHeaderHeight,
       contentScrollbarHeight,
-      slotClickedFunc,
-      slotItemTemplateResolver
-    } = this.props;
-    const { renderData } = schedulerData;
-    let width = schedulerData.getResourceTableWidth() - 2;
-    let paddingBottom = contentScrollbarHeight;
-    let resourceList = renderData.map(item => {
-      let a =
-        slotClickedFunc != undefined ? (
-          <a
-            onClick={() => {
-              slotClickedFunc(schedulerData, item);
+      contentScrollbarWidth,
+      resourceScrollbarWidth,
+      resourcePaddingBottom,
+      renderData,
+      resourceColumns
+    } = this.props
+    const resourceContentStyle = {
+      overflowX: 'auto',
+      overflowY: 'auto',
+      width: resourceTableWidth + resourceScrollbarWidth - 2,
+      margin: `0px -${contentScrollbarWidth}px 0px 0px`
+    }
+    return (
+      <div className="resource-view">
+        <div
+          style={{
+            overflow: 'hidden',
+            borderBottom: '1px solid #e9e9e9',
+            height: tableHeaderHeight
+          }}
+        >
+          <div
+            style={{
+              overflowX: 'scroll',
+              overflowY: 'hidden',
+              margin: `0px 0px -${contentScrollbarHeight}px`
             }}
           >
-            <span className="expander-space" />
-            {item.slotName}
-          </a>
-        ) : (
-          <span>
-            <span className="expander-space" />
-            <span>{item.slotName}</span>
-          </span>
-        );
-      let slotItem = (
-        <div
-          title={item.slotName}
-          className="overflow-text header2-text"
-          style={{ textAlign: 'left' }}
-        >
-          {a}
+            <table className="resource-table">
+              <thead>
+                <tr style={{ height: tableHeaderHeight }}>
+                  <th className="header3-text" style={{ width: 120 }}>
+                    {'会议室列表'}
+                  </th>
+                  <th className="header3-text" style={{ width: 100 }}>
+                    {'容量'}
+                  </th>
+                  <th className="header3-text" style={{ width: 100 }}>
+                    {'容量'}
+                  </th>
+                </tr>
+              </thead>
+            </table>
+          </div>
         </div>
-      );
-      if (!!slotItemTemplateResolver) {
-        let temp = slotItemTemplateResolver(
-          schedulerData,
-          item,
-          slotClickedFunc,
-          width,
-          'overflow-text header2-text'
-        );
-        if (!!temp) slotItem = temp;
-      }
-
-      return (
-        <tr key={item.slotId}>
-          <td data-resource-id={item.slotId} style={{ height: item.rowHeight }}>
-            {slotItem}
-          </td>
-        </tr>
-      );
-    });
-
-    return (
-      <div style={{ paddingBottom: paddingBottom }}>
-        <table className="resource-table">
-          <tbody>{resourceList}</tbody>
-        </table>
+        <div
+          style={resourceContentStyle}
+          ref={this.schedulerResourceRef}
+          onMouseOver={this.onSchedulerResourceMouseOver}
+          onMouseOut={this.onSchedulerResourceMouseOut}
+          onScroll={this.onSchedulerResourceScroll}
+        >
+          <ResourceListView
+            renderData={renderData}
+            resourceColumns={resourceColumns}
+            contentScrollbarHeight={resourcePaddingBottom}
+          />
+        </div>
       </div>
-    );
+    )
   }
 }
 
-export default ResourceView;
+ResourceView.propTypes = {
+  resourceTableWidth: PropTypes.number,
+  tableHeaderHeight: PropTypes.number,
+  contentScrollbarHeight: PropTypes.number,
+  contentScrollbarWidth: PropTypes.number,
+  resourceScrollbarWidth: PropTypes.number,
+  resourcePaddingBottom: PropTypes.number,
+  renderData: PropTypes.object,
+  resourceColumns: PropTypes.array
+}
+
+export default ResourceView

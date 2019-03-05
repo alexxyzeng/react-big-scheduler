@@ -1,30 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
-import { PropTypes } from 'prop-types'
-// Col, Row and Icon do not have their own less files for styling. They use
-// rules declared in antd's global css. If these styles are imported directly
-// from within antd, they'll include, for instance, reset rules. These will
-// affect everything on the page and in essence would leak antd's global styles
-// into all projects using this library. Instead of doing that, we are using
-// a hack which allows us to wrap all antd styles to target specific root. In
-// this case the root id will be "RBS-Scheduler-root". This way the reset styles
-// won't be applied to elements declared outside of <Scheduler /> component.
-//
-// You can get more context for the issue by reading:
-// https://github.com/ant-design/ant-design/issues/4331
-// The solution is based on:
-// https://github.com/ant-design/ant-design/issues/4331#issuecomment-391066131
-//
-// For development
-// This fix is implemented with webpack's NormalModuleReplacementPlugin in
-// webpack/webpack-dev.config.js.
-//
-// For library builds
-// This fix is implemented by the build script in scripts/build.js
-//
-// The next components have their own specific stylesheets which we import
-// separately here to avoid importing from files which have required the global
-// antd styles.
+import PropTypes from 'prop-types'
 import Col from 'antd/lib/col'
 import Row from 'antd/lib/row'
 import Icon from 'antd/lib/icon'
@@ -39,7 +15,7 @@ import 'antd/lib/calendar/style/index.css'
 import EventItem from './EventItem'
 import DnDSource from './DnDSource'
 import DnDContext from './DnDContext'
-import ResourceView from './ResourceView'
+import ResourceListView from './ResourceListView'
 import TimeLineView from './TimeLineView'
 import BodyView from './BodyView'
 import ResourceEvents from './ResourceEvents'
@@ -51,6 +27,7 @@ import CellUnits from './CellUnits'
 import SummaryPos from './SummaryPos'
 import SchedulerData from './SchedulerData'
 import DemoData from './DemoData'
+import ResourceHeaderView from './ResourceHeaderView'
 const RadioButton = Radio.Button
 const RadioGroup = Radio.Group
 
@@ -58,7 +35,10 @@ class Scheduler extends Component {
   constructor(props) {
     super(props)
 
-    const { schedulerData, dndSources, size } = props
+    const { schedulerData, dndSources, size, resourceColumns } = props
+    this.resourceWidth = resourceColumns.reduce((prev, next) => {
+      return prev + next.width || 60
+    }, 0)
     let sources = []
     sources.push(
       new DnDSource(props => {
@@ -148,7 +128,8 @@ class Scheduler extends Component {
       leftCustomHeader,
       rightCustomHeader,
       nonAgendaCellHeaderTemplateResolver,
-      size: { height }
+      size: { height },
+      resourceColumns
     } = this.props
     const { viewType, showAgenda, isEventPerspective, config } = schedulerData
     const schedulerWidth = schedulerData.getSchedulerWidth()
@@ -163,7 +144,8 @@ class Scheduler extends Component {
       schedulerData,
       nonAgendaCellHeaderTemplateResolver,
       schedulerWidth,
-      height
+      height,
+      resourceColumns
     )
 
     return (
@@ -415,7 +397,8 @@ class Scheduler extends Component {
     schedulerData,
     nonAgendaCellHeaderTemplateResolver,
     width,
-    height
+    height,
+    resourceColumns
   ) {
     const { renderData, showAgenda, config } = schedulerData
     if (showAgenda) {
@@ -424,7 +407,7 @@ class Scheduler extends Component {
     let tbodyContent = <tr />
     //  TODO: 左侧导航信息列表，研究如何自定义内容和宽高
     //   let resourceTableWidth = schedulerData.getResourceTableWidth();
-    let resourceTableWidth = 320
+    let resourceTableWidth = this.resourceWidth
     let schedulerContainerWidth = width - resourceTableWidth + 1
     let schedulerWidth = schedulerData.getContentTableWidth() - 1
     let DndResourceEvents = this.state.dndContext.getDropTarget()
@@ -478,6 +461,7 @@ class Scheduler extends Component {
     tbodyContent = (
       // 左侧列表需要增加功能
       <tr>
+        {/* TODO: 抽离ResourceView */}
         <td style={{ width: resourceTableWidth, verticalAlign: 'top' }}>
           <div className="resource-view">
             <div
@@ -494,13 +478,10 @@ class Scheduler extends Component {
                   margin: `0px 0px -${contentScrollbarHeight}px`
                 }}
               >
-                <table className="resource-table">
-                  <thead>
-                    <tr style={{ height: config.tableHeaderHeight }}>
-                      <th className="header3-text">{resourceName}</th>
-                    </tr>
-                  </thead>
-                </table>
+                <ResourceHeaderView
+                  resourceColumns={resourceColumns}
+                  tableHeaderHeight={config.tableHeaderHeight}
+                />
               </div>
             </div>
             <div
@@ -510,8 +491,9 @@ class Scheduler extends Component {
               onMouseOut={this.onSchedulerResourceMouseOut}
               onScroll={this.onSchedulerResourceScroll}
             >
-              <ResourceView
-                {...this.props}
+              <ResourceListView
+                renderData={renderData}
+                resourceColumns={resourceColumns}
                 contentScrollbarHeight={resourcePaddingBottom}
               />
             </div>
@@ -584,21 +566,6 @@ class Scheduler extends Component {
     )
     return tbodyContent
   }
-
-  //  背景图
-  /* TODO: 实现自定义功能：选中时间范围等等 */
-
-  renderBackgroundView = schedulerWidth => {
-    const { schedulerData } = this.props
-
-    return (
-      <BodyView
-        schedulerWidth={schedulerWidth}
-        schedulerData={schedulerData}
-        type={schedulerData.viewType}
-      />
-    )
-  }
 }
 
 export const DATE_FORMAT = 'YYYY-MM-DD'
@@ -654,7 +621,6 @@ Scheduler.propTypes = {
   eventItemTemplateResolver: PropTypes.func,
   dndSources: PropTypes.array,
   slotClickedFunc: PropTypes.func,
-  slotItemTemplateResolver: PropTypes.func,
   nonAgendaCellHeaderTemplateResolver: PropTypes.func,
   //  各个方向的滚动事件
   onScrollLeft: PropTypes.func,
@@ -663,5 +629,7 @@ Scheduler.propTypes = {
   onScrollBottom: PropTypes.func,
   //  宽高
   size: PropTypes.object,
-  showTimeIndicator: PropTypes.bool
+  //  是否显示当前时间
+  showTimeIndicator: PropTypes.bool,
+  resourceColumns: PropTypes.array
 }

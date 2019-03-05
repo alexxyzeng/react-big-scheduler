@@ -804,7 +804,6 @@ export default class SchedulerData {
         let headerEvents = headers.map(header => {
           return this._createInitHeaderEvents(header)
         })
-
         return {
           slotId: eventGroup.id,
           slotName: eventGroup.name,
@@ -813,6 +812,7 @@ export default class SchedulerData {
         }
       })
       : resources.map(resource => {
+        console.log(resource, '--- res')
         let headerEvents = headers.map(header => {
           return this._createInitHeaderEvents(header)
         })
@@ -820,6 +820,7 @@ export default class SchedulerData {
         return {
           slotId: resource.id,
           slotName: resource.name,
+          resource,
           rowHeight: 0,
           headerItems: headerEvents
         }
@@ -1016,7 +1017,7 @@ export default class SchedulerData {
           headerItem.events.forEach(e => {
             if (!!e && !!e.eventItem) events.push(e.eventItem)
           })
-
+          console.log(resourceEvents, '--- events')
           headerItem.summary = this.behaviors.getSummaryFunc(
             this,
             events,

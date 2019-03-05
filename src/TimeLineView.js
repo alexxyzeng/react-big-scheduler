@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { CellUnits } from './index'
 
-class HeaderView extends React.PureComponent {
+class HeaderView extends React.Component {
   constructor(props) {
     super(props)
   }
