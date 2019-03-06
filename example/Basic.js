@@ -18,7 +18,7 @@ const resourceColumns = [
   {
     title: '会议室列表',
     key: 'name',
-    width: 120
+    width: 220
   },
   {
     title: '容量',

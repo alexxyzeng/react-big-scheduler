@@ -252,3 +252,11 @@ table.scheduler-table tr:last-child td {
 .selected-area {
   position: absolute;
 }
+
+.scheduler-bg-blank {
+  background-image: url('../assets/blank-normal.svg');
+}
+
+.scheduler-bg-blank-dark {
+  background-image: url('../assets/blank-dark.svg');
+}

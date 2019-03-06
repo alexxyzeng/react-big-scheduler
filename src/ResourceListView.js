@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
+import BlankBodyView from './BlankBodyView'
 class ResourceListView extends Component {
   constructor(props) {
     super(props)
@@ -11,14 +12,22 @@ class ResourceListView extends Component {
     contentScrollbarHeight: PropTypes.number.isRequired,
     slotClickedFunc: PropTypes.func,
     slotItemTemplateResolver: PropTypes.func,
-    resourceColumns: PropTypes.array
+    resourceColumns: PropTypes.array,
+    extraBlankCount: PropTypes.number,
+    cellHeight: PropTypes.number
   }
 
   render() {
-    const { renderData, contentScrollbarHeight, resourceColumns } = this.props
+    const {
+      renderData,
+      contentScrollbarHeight,
+      resourceColumns,
+      extraBlankCount,
+      cellHeight
+    } = this.props
     // let width = schedulerData.getResourceTableWidth() - 2
     let paddingBottom = contentScrollbarHeight
-    let resourceList = renderData.map(item => {
+    let resourceList = renderData.map((item, index) => {
       // let a =
       //   slotClickedFunc != undefined ? (
       //     <a
@@ -35,9 +44,10 @@ class ResourceListView extends Component {
       //       <span>{item.slotName}</span>
       //     </span>
       //   )
+
       const { resource, rowHeight } = item
       let slotItems = resourceColumns.map(col => {
-        const { key, width } = col
+        const { key, width } = col || {}
         const resValue = resource[key] || ''
         return (
           <td
@@ -73,6 +83,14 @@ class ResourceListView extends Component {
         <table className="resource-table">
           <tbody>{resourceList}</tbody>
         </table>
+        <BlankBodyView
+          rowCount={extraBlankCount}
+          colCount={resourceColumns.length - 1}
+          cellWidth={219}
+          cellHeight={cellHeight}
+          renderDataLength={resourceList.length}
+          containerWidth={318}
+        />
       </div>
     )
   }

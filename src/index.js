@@ -401,6 +401,11 @@ class Scheduler extends Component {
     resourceColumns
   ) {
     const { renderData, showAgenda, config } = schedulerData
+    const renderRowHeight = renderData.reduce((prev, next) => {
+      return prev + next.rowHeight
+    }, 0)
+    const cellHeight = schedulerData.getContentCellHeight()
+    const extraBlankCount = (height - config.tableHeaderHeight - renderRowHeight) / cellHeight
     if (showAgenda) {
       return <AgendaView {...this.props} />
     }
@@ -492,6 +497,8 @@ class Scheduler extends Component {
               onScroll={this.onSchedulerResourceScroll}
             >
               <ResourceListView
+                extraBlankCount={extraBlankCount}
+                cellHeight={cellHeight}
                 renderData={renderData}
                 resourceColumns={resourceColumns}
                 contentScrollbarHeight={resourcePaddingBottom}
@@ -555,7 +562,8 @@ class Scheduler extends Component {
                 <BodyView
                   schedulerWidth={schedulerWidth}
                   schedulerData={schedulerData}
-                  height={height}
+                  extraBlankCount={extraBlankCount}
+                  cellHeight={cellHeight}
                   type={schedulerData.viewType}
                 />
               </div>

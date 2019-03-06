@@ -33,7 +33,7 @@ export default {
 
   //  TODO: 考虑将这段配置移出
   eventItemHeight: 36,
-  eventItemLineHeight: 36,
+  eventItemLineHeight: 38,
   nonAgendaSlotMinHeight: 0,
   dayStartFrom: 0,
   dayStopTo: 23,

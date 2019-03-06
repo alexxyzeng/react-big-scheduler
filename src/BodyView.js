@@ -1,8 +1,10 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import { PropTypes } from 'prop-types'
 import { ViewTypes } from './index'
 
-class BodyView extends PureComponent {
+import BlankBodyView from './BlankBodyView'
+
+class BodyView extends Component {
   constructor(props) {
     super(props)
     const { schedulerData } = this.props
@@ -12,16 +14,18 @@ class BodyView extends PureComponent {
 
   static propTypes = {
     schedulerData: PropTypes.object.isRequired,
-    schedulerWidth: PropTypes.number.isRequired
+    schedulerWidth: PropTypes.number.isRequired,
+    extraBlankCount: PropTypes.number,
+    cellHeight: PropTypes.number,
   }
 
   render() {
-    const { schedulerData, schedulerWidth, height } = this.props
+    const { schedulerData, schedulerWidth, extraBlankCount, cellHeight } = this.props
     const { renderData, headers, config, behaviors } = schedulerData
 
     let cellWidth = schedulerData.getContentCellWidth()
     //  TODO: 这里需要做优化
-    let tableRows = renderData.map((item, index) => {
+    let tableRows = renderData.map(item => {
       const { rowHeight } = item
       const {
         resource: { id: slotId }
@@ -56,9 +60,8 @@ class BodyView extends PureComponent {
       )
     })
 
-    const extraBlank =
-      height - this.cellHeight * renderData.length - this.headerHeight
-    const blankToInsertCount = Math.ceil(extraBlank / this.cellHeight)
+    const renderDataLength = renderData.length
+    const blankCellWidth = cellWidth * 4
 
     return (
       <div className="scheduler-bg">
@@ -70,21 +73,15 @@ class BodyView extends PureComponent {
         >
           <tbody>{tableRows}</tbody>
         </table>
-        {/* TODO: 增加占位背景图 */}
-        {/* <div
-          style={{
-            width: schedulerWidth,
-            height: `${this.cellHeight}px`,
-            backgroundColor: 'lightGrey'
-          }}
+        {/* TODO: 计算所需的Col数量 */}
+        <BlankBodyView
+          rowCount={extraBlankCount}
+          colCount={23}
+          cellWidth={blankCellWidth}
+          cellHeight={cellHeight}
+          renderDataLength={renderDataLength}
+          containerWidth={schedulerWidth}
         />
-        <div
-          style={{
-            width: schedulerWidth,
-            height: `${this.cellHeight}px`,
-            backgroundColor: 'lightGrey'
-          }}
-        /> */}
       </div>
     )
   }

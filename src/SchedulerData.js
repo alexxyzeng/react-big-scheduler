@@ -812,7 +812,6 @@ export default class SchedulerData {
         }
       })
       : resources.map(resource => {
-        console.log(resource, '--- res')
         let headerEvents = headers.map(header => {
           return this._createInitHeaderEvents(header)
         })

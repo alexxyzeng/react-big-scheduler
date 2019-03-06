@@ -565,7 +565,7 @@ class EventItem extends PureComponent {
       eventItem.showPopover == false ? (
         <div>{connectDragPreview(connectDragSource(a))}</div>
       ) : (
-        <Popover placement="bottomLeft" content={content} trigger="hover">
+        <Popover placement="right" content={content} trigger="hover">
           {connectDragPreview(connectDragSource(a))}
         </Popover>
       )
