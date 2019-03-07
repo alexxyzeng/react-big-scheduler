@@ -12,11 +12,17 @@ function BlankBodyView({
   containerWidth
 }) {
   // if (rowCount <= 1) return null
+  //  FIXME: rowCount为1的时候滚动不同步
+  if (rowCount === 1) {
+    return (
+      <div style={{ position: 'relative', height: cellHeight }}>{blanks}</div>
+    )
+  }
   let blanks = []
   for (let i = 0; i < rowCount; i++) {
     //  TODO: 待调整背景色
     const backgroundColor =
-      (renderDataLength + i) % 2 === 0 ? disabldColor : disableDarkColor
+      (renderDataLength + i) % 2 === 0 ? disableDarkColor : disabldColor
     blanks.push(
       <div
         key={i}

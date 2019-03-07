@@ -68,9 +68,9 @@ class Scheduler extends Component {
     this.scrollTop = 0
     this.scrollLeft = 0
 
-    if (schedulerData.isSchedulerResponsive()) {
-      window.onresize = this.onWindowResize
-    }
+    // if (schedulerData.isSchedulerResponsive()) {
+    //   window.onresize = this.onWindowResize
+    // }
   }
 
   //  TODO: 修改resize事件

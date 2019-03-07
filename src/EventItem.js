@@ -6,6 +6,17 @@ import EventItemPopover from './EventItemPopover'
 import { CellUnits, DATETIME_FORMAT } from './index'
 import { DnDTypes } from './DnDTypes'
 
+/**
+ *
+ * 结束会议：可弹窗，不可移动，不可拖拽
+ * 与我无关会议：可弹窗，不可移动，不可拖拽
+ * 进行中会议（与我无关）： 可弹窗，不可移动，可拖拽修改结束时间（不低于当前时间）
+ * 未进行会议（我是参与人）：可弹窗，不可移动，不可拖拽，可修改会议参与状态（未响应，已同意、已拒绝）
+ * 未进行会议（我是发起人）：可弹窗，可移动，可拖拽修改开始和结束时间（不低于当前时间，修改后最低为15分钟）
+ * 冲突会议（与我无关）：可弹窗，不可移动，不可拖拽
+ * 冲突会议（我是发起人）：可弹窗，可移动，不可拖拽
+ */
+
 //  待优化
 class EventItem extends PureComponent {
   constructor(props) {
@@ -508,17 +519,20 @@ class EventItem extends PureComponent {
     }
     const duration = `${localeMoment(eventItem.start).format(
       'hh:mm'
-    )} -- ${localeMoment(eventItem.end).format('hh:mm')}`
+    )} - ${localeMoment(eventItem.end).format('hh:mm')}`
     let eventItemTemplate = (
       <div
         // className={roundCls + ' event-item'}
         className={'event-item'}
         key={eventItem.id}
-        style={{ height: config.eventItemHeight, backgroundColor: bgColor }}
+        style={{
+          height: config.eventItemHeight,
+          backgroundColor: bgColor,
+          padding: '0 8px'
+        }}
       >
         <span
           style={{
-            marginLeft: '10px',
             lineHeight: `${config.eventItemHeight / 2}px`
           }}
         >
@@ -526,7 +540,6 @@ class EventItem extends PureComponent {
         </span>
         <span
           style={{
-            marginLeft: '10px',
             lineHeight: `${config.eventItemHeight / 2}px`
           }}
         >
@@ -547,17 +560,17 @@ class EventItem extends PureComponent {
       )
 
     let a = (
-      <a
+      <div
         className="timeline-event"
         style={{ left: left, width: width, top: top }}
-        onClick={() => {
-          if (eventItemClick) eventItemClick(schedulerData, eventItem)
-        }}
+        // onClick={() => {
+        //   if (eventItemClick) eventItemClick(schedulerData, eventItem)
+        // }}
       >
         {eventItemTemplate}
         {startResizeDiv}
         {endResizeDiv}
-      </a>
+      </div>
     )
 
     return isDragging ? null : schedulerData._isResizing() ||
@@ -565,7 +578,7 @@ class EventItem extends PureComponent {
       eventItem.showPopover == false ? (
         <div>{connectDragPreview(connectDragSource(a))}</div>
       ) : (
-        <Popover placement="right" content={content} trigger="hover">
+        <Popover placement="right" content={content} trigger="click">
           {connectDragPreview(connectDragSource(a))}
         </Popover>
       )

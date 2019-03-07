@@ -24,12 +24,12 @@ export default {
   yearCellWidth: 120,
   customCellWidth: 120,
   //  TODO: 修改关于显示最多会议数量的逻辑
-  dayMaxEvents: 99,
-  weekMaxEvents: 99,
-  monthMaxEvents: 99,
-  quarterMaxEvents: 99,
-  yearMaxEvents: 99,
-  customMaxEvents: 99,
+  dayMaxEvents: 9999,
+  weekMaxEvents: 9999,
+  monthMaxEvents: 9999,
+  quarterMaxEvents: 9999,
+  yearMaxEvents: 9999,
+  customMaxEvents: 9999,
 
   //  TODO: 考虑将这段配置移出
   eventItemHeight: 36,
@@ -38,7 +38,7 @@ export default {
   dayStartFrom: 0,
   dayStopTo: 23,
   defaultEventBgColor: '#80C5F6',
-  selectedAreaColor: '#7EC2F3',
+  selectedAreaColor: '#C4DAF4',
   nonWorkingTimeHeadColor: '#999999',
   workingTimeHeadColor: '',
   // nonWorkingTimeHeadBgColor: '#fff0f6',

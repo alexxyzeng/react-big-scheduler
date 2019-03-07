@@ -11,9 +11,9 @@ const DemoData = {
     { id: 'r8', name: 'Resource8', capacity: 20 },
     { id: 'r9', name: 'Resource9', capacity: 33 },
     { id: 'r10', name: 'Resource10', capacity: 6 },
-    { id: 'r11', name: 'Resource11', capacity: 8 }
-    // { id: 'r12', name: 'Resource12', capacity: 24 }
-    // { id: 'r13', name: 'Resource13', capacity: 28 },
+    { id: 'r11', name: 'Resource11', capacity: 8 },
+    { id: 'r12', name: 'Resource12', capacity: 24 },
+    { id: 'r13', name: 'Resource13', capacity: 28 }
     // { id: 'r14', name: 'Resource14', capacity: 32 },
     // { id: 'r15', name: 'Resource15', capacity: 14 },
     // { id: 'r16', name: 'Resource16', capacity: 8 },
@@ -109,14 +109,14 @@ const DemoData = {
       resourceId: 'r1',
       title: 'I am finished',
       bgColor: '#D9D9D9',
-      showPopover: false,
+      showPopover: true,
       resizable: false
     },
     {
       id: 2,
       start: '2019-03-01 12:30:00',
       end: '2019-03-01 23:30:00',
-      resourceId: 'r1',
+      resourceId: 'r4',
       title: 'I am not resizable',
       resizable: false
     },
@@ -124,7 +124,7 @@ const DemoData = {
       id: 3,
       start: '2019-03-01 12:30:00',
       end: '2019-03-01 23:30:00',
-      resourceId: 'r1',
+      resourceId: 'r3',
       title: 'I am not movable',
       movable: false
     },
@@ -132,7 +132,7 @@ const DemoData = {
       id: 4,
       start: '2017-12-19 14:30:00',
       end: '2017-12-20 23:30:00',
-      resourceId: 'r4',
+      resourceId: 'r3',
       title: 'I am not start-resizable',
       startResizable: false
     },
