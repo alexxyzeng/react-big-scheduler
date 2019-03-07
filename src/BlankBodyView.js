@@ -11,7 +11,7 @@ function BlankBodyView({
   renderDataLength,
   containerWidth
 }) {
-  if (rowCount <= 0) return null
+  // if (rowCount <= 1) return null
   let blanks = []
   for (let i = 0; i < rowCount; i++) {
     //  TODO: 待调整背景色

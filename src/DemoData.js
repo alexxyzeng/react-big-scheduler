@@ -5,14 +5,14 @@ const DemoData = {
     { id: 'r2', name: 'Resource2', capacity: 15 },
     { id: 'r3', name: 'Resource3', capacity: 18 },
     { id: 'r4', name: 'Resource4', capacity: 13 },
-    { id: 'r5', name: 'Resource5', capacity: 6 }
-    // { id: 'r6', name: 'Resource6', capacity: 50 },
-    // { id: 'r7', name: 'Resource7', capacity: 12 },
-    // { id: 'r8', name: 'Resource8', capacity: 20 },
-    // { id: 'r9', name: 'Resource9', capacity: 33 },
-    // { id: 'r10', name: 'Resource10', capacity: 6 },
-    // { id: 'r11', name: 'Resource11', capacity: 8 },
-    // { id: 'r12', name: 'Resource12', capacity: 24 },
+    { id: 'r5', name: 'Resource5', capacity: 6 },
+    { id: 'r6', name: 'Resource6', capacity: 50 },
+    { id: 'r7', name: 'Resource7', capacity: 12 },
+    { id: 'r8', name: 'Resource8', capacity: 20 },
+    { id: 'r9', name: 'Resource9', capacity: 33 },
+    { id: 'r10', name: 'Resource10', capacity: 6 },
+    { id: 'r11', name: 'Resource11', capacity: 8 }
+    // { id: 'r12', name: 'Resource12', capacity: 24 }
     // { id: 'r13', name: 'Resource13', capacity: 28 },
     // { id: 'r14', name: 'Resource14', capacity: 32 },
     // { id: 'r15', name: 'Resource15', capacity: 14 },

@@ -405,7 +405,10 @@ class Scheduler extends Component {
       return prev + next.rowHeight
     }, 0)
     const cellHeight = schedulerData.getContentCellHeight()
-    const extraBlankCount = (height - config.tableHeaderHeight - renderRowHeight) / cellHeight
+    const extraBlankCount = Math.ceil(
+      (height - config.tableHeaderHeight - renderRowHeight) / cellHeight
+    )
+    console.log(extraBlankCount, '--- extra count')
     if (showAgenda) {
       return <AgendaView {...this.props} />
     }
