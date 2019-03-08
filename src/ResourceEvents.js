@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { PropTypes } from 'prop-types'
 import AddMore from './AddMore'
 import Summary from './Summary'
@@ -7,7 +7,7 @@ import { CellUnits, DATETIME_FORMAT, SummaryPos } from './index'
 import { getPos } from './Util'
 import { DnDTypes } from './DnDTypes'
 
-class ResourceEvents extends Component {
+class ResourceEvents extends PureComponent {
   constructor(props) {
     super(props)
 
@@ -170,7 +170,6 @@ class ResourceEvents extends Component {
     }
 
     if (hasConflict) {
-      console.log(hasConflict)
       const { conflictOccurred } = this.props
       if (conflictOccurred != undefined) {
         conflictOccurred(
@@ -202,6 +201,8 @@ class ResourceEvents extends Component {
   }
 
   render() {
+    console.log('render res events')
+    // TODO: 研究如何减少渲染
     const {
       resourceEvents,
       schedulerData,
@@ -259,7 +260,6 @@ class ResourceEvents extends Component {
                 ? evt.span * cellWidth - (index > 0 ? 5 : 6)
                 : 0
             //  TODO: 计算有冲突时的top值
-            console.log(evt, '--- get top')
             const hasConflict = evt.eventItem.hasConflict
             const rowHeight = hasConflict
               ? config.eventItemLineHeight / 2

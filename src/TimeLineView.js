@@ -9,7 +9,6 @@ class HeaderView extends React.Component {
 
   render() {
     // eslint-disable-next-line no-console
-    console.log('render header')
     const { schedulerData, nonAgendaCellHeaderTemplateResolver } = this.props
     const { headers, cellUnit, config, localeMoment } = schedulerData
     let headerHeight = schedulerData.getTableHeaderHeight()

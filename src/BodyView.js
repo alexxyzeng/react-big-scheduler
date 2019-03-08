@@ -16,15 +16,23 @@ class BodyView extends Component {
     schedulerData: PropTypes.object.isRequired,
     schedulerWidth: PropTypes.number.isRequired,
     extraBlankCount: PropTypes.number,
-    cellHeight: PropTypes.number,
+    cellHeight: PropTypes.number
   }
 
   render() {
-    const { schedulerData, schedulerWidth, extraBlankCount, cellHeight } = this.props
+    const {
+      schedulerData,
+      schedulerWidth,
+      extraBlankCount,
+      cellHeight,
+      viewType
+    } = this.props
+    console.log(viewType, '--- view type')
     const { renderData, headers, config, behaviors } = schedulerData
 
     let cellWidth = schedulerData.getContentCellWidth()
     //  TODO: 这里需要做优化
+    //  FIXME: 月视图有宽度bug
     let tableRows = renderData.map(item => {
       const { rowHeight } = item
       const {
@@ -45,6 +53,9 @@ class BodyView extends Component {
             header
           )
           if (cellBgColor) style = { ...style, backgroundColor: cellBgColor }
+        }
+        if (viewType !== ViewTypes.Day) {
+          style['borderRight'] = '1px solid #e3f0fb'
         }
         return (
           <td key={key} style={style}>

@@ -1032,8 +1032,7 @@ export default class SchedulerData {
         maxRowsCount > this.getCellMaxEvents()
           ? this.getCellMaxEvents()
           : maxRowsCount
-      //  TODO: 更新rowHeight 计算方法，判断每行是否有重复会议
-      console.log(this.events, resourceEvents)
+      //  更新rowHeight 计算方法，判断每行是否有重复会议
       const { slotId } = resourceEvents
       const hasConflict = this.events.some(event => event.resourceId === slotId && event.hasConflict)
       const { eventItemLineHeight, checkConflict, creatable, nonAgendaSlotMinHeight } = this.config

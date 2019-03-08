@@ -412,13 +412,13 @@ class Scheduler extends Component {
       return <AgendaView {...this.props} />
     }
     let tbodyContent = <tr />
-    //  TODO: 左侧导航信息列表，研究如何自定义内容和宽高
     //   let resourceTableWidth = schedulerData.getResourceTableWidth();
     let resourceTableWidth = this.resourceWidth
     let schedulerContainerWidth = width - resourceTableWidth + 1
     let schedulerWidth = schedulerData.getContentTableWidth() - 1
     let DndResourceEvents = this.state.dndContext.getDropTarget()
     let eventDndSource = this.state.dndContext.getDndSource()
+    //  TODO: 优化代码性能
     let resourceEventsList = renderData.map(item => {
       return (
         <DndResourceEvents
@@ -565,7 +565,7 @@ class Scheduler extends Component {
                   schedulerData={schedulerData}
                   extraBlankCount={extraBlankCount}
                   cellHeight={cellHeight}
-                  type={schedulerData.viewType}
+                  viewType={schedulerData.viewType}
                 />
               </div>
             </div>
