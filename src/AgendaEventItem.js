@@ -20,7 +20,7 @@ class AgendaEventItem extends Component {
     viewEventText: PropTypes.string,
     viewEvent2Click: PropTypes.func,
     viewEvent2Text: PropTypes.string,
-    eventItemTemplateResolver: PropTypes.func
+    renderEventItem: PropTypes.func
   };
 
   render() {
@@ -30,7 +30,7 @@ class AgendaEventItem extends Component {
       isEnd,
       eventItemClick,
       schedulerData,
-      eventItemTemplateResolver
+      renderEventItem
     } = this.props;
     const { config } = schedulerData;
     let roundCls = isStart
@@ -78,8 +78,8 @@ class AgendaEventItem extends Component {
         </span>
       </div>
     );
-    if (eventItemTemplateResolver != undefined) {
-      eventItemTemplate = eventItemTemplateResolver(
+    if (renderEventItem != undefined) {
+      eventItemTemplate = renderEventItem(
         schedulerData,
         eventItem,
         bgColor,

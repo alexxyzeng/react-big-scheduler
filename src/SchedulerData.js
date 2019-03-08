@@ -939,7 +939,6 @@ export default class SchedulerData {
       this.headers
     )
     //this.events.sort(this._compare);
-
     this.events.forEach(item => {
       let resourceEventsList = initRenderData.filter(
         x => x.slotId === this._getEventSlotId(item)
@@ -979,7 +978,6 @@ export default class SchedulerData {
         })
       }
     })
-
     initRenderData.forEach(resourceEvents => {
       let maxRowsCount = 0
       let hasSummary = false
@@ -1016,7 +1014,6 @@ export default class SchedulerData {
           headerItem.events.forEach(e => {
             if (!!e && !!e.eventItem) events.push(e.eventItem)
           })
-          console.log(resourceEvents, '--- events')
           headerItem.summary = this.behaviors.getSummaryFunc(
             this,
             events,
@@ -1035,21 +1032,27 @@ export default class SchedulerData {
         maxRowsCount > this.getCellMaxEvents()
           ? this.getCellMaxEvents()
           : maxRowsCount
+      //  TODO: 更新rowHeight 计算方法，判断每行是否有重复会议
+      console.log(this.events, resourceEvents)
+      const { slotId } = resourceEvents
+      const hasConflict = this.events.some(event => event.resourceId === slotId && event.hasConflict)
+      const { eventItemLineHeight, checkConflict, creatable, nonAgendaSlotMinHeight } = this.config
+      const itemLineHeight = hasConflict ? eventItemLineHeight / 2 : eventItemLineHeight
       resourceEvents.rowHeight =
         rowsCount === 0
-          ? this.config.eventItemLineHeight + 2
-          : rowsCount * this.config.eventItemLineHeight +
-            (this.config.creatable && this.config.checkConflict === false
+          ? eventItemLineHeight + 2
+          : rowsCount * itemLineHeight +
+            (creatable && checkConflict === false
               ? 20
               : 2)
       if (hasSummary)
         resourceEvents.rowHeight =
-          resourceEvents.rowHeight + this.config.eventItemLineHeight
+          resourceEvents.rowHeight + eventItemLineHeight
       if (
-        this.config.nonAgendaSlotMinHeight !== 0 &&
-        resourceEvents.rowHeight < this.config.nonAgendaSlotMinHeight
+        nonAgendaSlotMinHeight !== 0 &&
+        resourceEvents.rowHeight < nonAgendaSlotMinHeight
       )
-        resourceEvents.rowHeight = this.config.nonAgendaSlotMinHeight
+        resourceEvents.rowHeight = nonAgendaSlotMinHeight
     })
 
     this.renderData = initRenderData

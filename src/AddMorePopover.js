@@ -30,7 +30,7 @@ class AddMorePopover extends Component {
         viewEventText:PropTypes.string,
         viewEvent2Click: PropTypes.func,
         viewEvent2Text: PropTypes.string,
-        eventItemTemplateResolver: PropTypes.func,
+        renderEventItem: PropTypes.func,
     }
 
     render() {

@@ -136,6 +136,7 @@ table.scheduler-table tr:last-child td {
 
 .timeline-event {
   position: absolute;
+  overflow: hidden;
 }
 
 .day-event {
@@ -172,7 +173,7 @@ table.scheduler-table tr:last-child td {
 .event-item {
   /* margin: 1px 0; */
   width: 100%;
-
+  overflow: hidden;
   /* padding-right: 20px !important; */
 }
 

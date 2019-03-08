@@ -56,9 +56,10 @@ class EventItem extends PureComponent {
     viewEvent2Click: PropTypes.func,
     viewEvent2Text: PropTypes.string,
     conflictOccurred: PropTypes.func,
-    eventItemTemplateResolver: PropTypes.func
+    renderEventItem: PropTypes.func
   }
 
+  // eslint-disable-next-line react/no-deprecated
   componentWillReceiveProps(np) {
     const { left, top, width } = np
     this.setState({
@@ -460,22 +461,14 @@ class EventItem extends PureComponent {
       isStart,
       isEnd,
       isInPopover,
-      eventItemClick,
       schedulerData,
       isDragging,
       connectDragSource,
       connectDragPreview,
-      eventItemTemplateResolver
+      renderEventItem
     } = this.props
     const { config, localeMoment } = schedulerData
     const { left, width, top } = this.state
-    // let roundCls = isStart
-    //   ? isEnd
-    //     ? 'round-all'
-    //     : 'round-head'
-    //   : isEnd
-    //     ? 'round-tail'
-    //     : 'round-none'
     let bgColor = config.defaultEventBgColor
     if (eventItem.bgColor) bgColor = eventItem.bgColor
 
@@ -493,7 +486,6 @@ class EventItem extends PureComponent {
         statusColor={bgColor}
       />
     )
-
     let start = localeMoment(eventItem.start)
     let eventTitle = isInPopover
       ? `${start.format('HH:mm')} ${titleText}`
@@ -520,35 +512,39 @@ class EventItem extends PureComponent {
     const duration = `${localeMoment(eventItem.start).format(
       'hh:mm'
     )} - ${localeMoment(eventItem.end).format('hh:mm')}`
+    const rowHeight = config.eventItemHeight / 2
+    const itemHeight = eventItem.hasConflict
+      ? rowHeight
+      : config.eventItemHeight
     let eventItemTemplate = (
       <div
         // className={roundCls + ' event-item'}
         className={'event-item'}
         key={eventItem.id}
         style={{
-          height: config.eventItemHeight,
+          height: itemHeight,
           backgroundColor: bgColor,
           padding: '0 8px'
         }}
       >
         <span
           style={{
-            lineHeight: `${config.eventItemHeight / 2}px`
+            lineHeight: `${rowHeight}px`
           }}
         >
           {eventTitle}
         </span>
         <span
           style={{
-            lineHeight: `${config.eventItemHeight / 2}px`
+            lineHeight: `${rowHeight}px`
           }}
         >
           {duration}
         </span>
       </div>
     )
-    if (eventItemTemplateResolver != undefined)
-      eventItemTemplate = eventItemTemplateResolver(
+    if (renderEventItem != undefined)
+      eventItemTemplate = renderEventItem(
         schedulerData,
         eventItem,
         bgColor,
@@ -559,7 +555,7 @@ class EventItem extends PureComponent {
         undefined
       )
 
-    let a = (
+    let eventItemContent = (
       <div
         className="timeline-event"
         style={{ left: left, width: width, top: top }}
@@ -576,10 +572,10 @@ class EventItem extends PureComponent {
     return isDragging ? null : schedulerData._isResizing() ||
       config.eventItemPopoverEnabled == false ||
       eventItem.showPopover == false ? (
-        <div>{connectDragPreview(connectDragSource(a))}</div>
+        <div>{connectDragPreview(connectDragSource(eventItemContent))}</div>
       ) : (
-        <Popover placement="right" content={content} trigger="click">
-          {connectDragPreview(connectDragSource(a))}
+        <Popover placement="right" title={null} content={content} trigger="click">
+          {connectDragPreview(connectDragSource(eventItemContent))}
         </Popover>
       )
   }

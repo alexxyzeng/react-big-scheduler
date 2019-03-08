@@ -17,7 +17,7 @@
 * Add SchedulerData.removeEvent, SchedulerData.removeEventById func
 
 ### 2019-01-08
-* Add Scheduler.eventItemPopoverTemplateResolver func to customize the event popover style([MikeDev96](https://github.com/MikeDev96))
+* Add Scheduler.renderEventPopoverContent func to customize the event popover style([MikeDev96](https://github.com/MikeDev96))
 
 ### 2018-12-03
 * Check showPopover property on event level to disable popover

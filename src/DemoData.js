@@ -110,15 +110,26 @@ const DemoData = {
       title: 'I am finished',
       bgColor: '#D9D9D9',
       showPopover: true,
-      resizable: false
+      resizable: false,
+      hasConflict: true
     },
     {
       id: 2,
       start: '2019-03-01 12:30:00',
       end: '2019-03-01 23:30:00',
-      resourceId: 'r4',
+      resourceId: 'r1',
       title: 'I am not resizable',
-      resizable: false
+      resizable: false,
+      hasConflict: true
+    },
+    {
+      id: 10,
+      start: '2019-03-01 12:30:00',
+      end: '2019-03-01 23:30:00',
+      resourceId: 'r1',
+      title: 'I am not resizable',
+      resizable: false,
+      hasConflict: true
     },
     {
       id: 3,
@@ -183,7 +194,8 @@ const DemoData = {
       resourceId: 'r1',
       title: 'R1 has recurring tasks every week on Tuesday, Friday',
       rrule: 'FREQ=WEEKLY;DTSTART=20171219T013000Z;BYDAY=TU,FR',
-      bgColor: '#f759ab'
+      bgColor: '#f759ab',
+      hasConflict: true
     },
     {
       id: 11,

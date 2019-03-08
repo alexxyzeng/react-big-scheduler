@@ -46,7 +46,7 @@ class CustomEventStyle extends Component{
                                updateEventEnd={this.updateEventEnd}
                                moveEvent={this.moveEvent}
                                newEvent={this.newEvent}
-                               eventItemTemplateResolver={this.eventItemTemplateResolver}
+                               renderEventItem={this.renderEventItem}
                     />
                 </div>
             </div>
@@ -148,7 +148,7 @@ class CustomEventStyle extends Component{
         }
     }
 
-    eventItemTemplateResolver = (schedulerData, event, bgColor, isStart, isEnd, mustAddCssClass, mustBeHeight, agendaMaxEventWidth) => {
+    renderEventItem = (schedulerData, event, bgColor, isStart, isEnd, mustAddCssClass, mustBeHeight, agendaMaxEventWidth) => {
         let borderWidth = isStart ? '4' : '0';
         let borderColor =  'rgba(0,139,236,1)', backgroundColor = '#80C5F6';
         let titleText = schedulerData.behaviors.getEventTextFunc(schedulerData, event);

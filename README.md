@@ -599,17 +599,17 @@ SchedulerData is the view model of Scheduler, we can modify it to control the vi
   Callback function fired when there is a conflict. This could happen when creating, resizing or moving an event, and when  
   `SchedulerData.config.checkConflict` is `true`.
   
-  #### eventItemTemplateResolver
+  #### renderEventItem
   ```js
-  eventItemTemplateResolver: PropTypes.func
-  eventItemTemplateResolver(schedulerData, event, bgColor, isStart, isEnd, mustAddCssClass, mustBeHeight, agendaMaxEventWidth)
+  renderEventItem: PropTypes.func
+  renderEventItem(schedulerData, event, bgColor, isStart, isEnd, mustAddCssClass, mustBeHeight, agendaMaxEventWidth)
   ```
   Use this function, you can customize the event style. Refer to [this example](https://stephenchou1017.github.io/scheduler/#/customeventstyle).
   
-  ### eventItemPopoverTemplateResolver
+  ### renderEventPopoverContent
   ```js
-  eventItemPopoverTemplateResolver: PropTypes.func
-  eventItemPopoverTemplateResolver(schedulerData, eventItem, title, start, end, statusColor)
+  renderEventPopoverContent: PropTypes.func
+  renderEventPopoverContent(schedulerData, eventItem, title, start, end, statusColor)
   ```
   Use this function, you can customize the event's popover style. Refer to [this example](https://stephenchou1017.github.io/scheduler/#/custompopover).
   

@@ -408,7 +408,6 @@ class Scheduler extends Component {
     const extraBlankCount = Math.ceil(
       (height - config.tableHeaderHeight - renderRowHeight) / cellHeight
     )
-    console.log(extraBlankCount, '--- extra count')
     if (showAgenda) {
       return <AgendaView {...this.props} />
     }
@@ -469,7 +468,6 @@ class Scheduler extends Component {
     tbodyContent = (
       // 左侧列表需要增加功能
       <tr>
-        {/* TODO: 抽离ResourceView */}
         <td style={{ width: resourceTableWidth, verticalAlign: 'top' }}>
           <div className="resource-view">
             <div
@@ -629,7 +627,9 @@ Scheduler.propTypes = {
   conflictOccurred: PropTypes.func,
   //  自定义事件模板
   eventItem: PropTypes.object,
-  eventItemTemplateResolver: PropTypes.func,
+  renderEventItem: PropTypes.func,
+  renderEventPopoverContent: PropTypes.func,
+  renderEventPopoverTitle: PropTypes.func,
   dndSources: PropTypes.array,
   slotClickedFunc: PropTypes.func,
   nonAgendaCellHeaderTemplateResolver: PropTypes.func,
