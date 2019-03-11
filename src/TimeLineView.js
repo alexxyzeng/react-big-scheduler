@@ -1,22 +1,74 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+
 import { CellUnits } from './index'
+import { millSecondsInMinute } from './utils/const'
 
 class HeaderView extends React.Component {
   constructor(props) {
     super(props)
+    this.timer = null
+    this.state = { left: 0 }
+  }
+
+  // componentDidMount() {
+  //   this.timer = setInterval(() => {}, millSecondsInMinute)
+  // }
+
+  componentDidUpdate() {
+    const { showCurrentTime } = this.props
+    if (showCurrentTime && !this.timer) {
+      const left = this.getTimeViewLeft()
+      this.setState({ left })
+      this.timer = setInterval(() => {
+        const left = this.getTimeViewLeft()
+        this.setState({ left })
+      }, millSecondsInMinute)
+      return
+    }
+    if (!showCurrentTime && this.timer) {
+      clearInterval(this.timer)
+      this.timer = null
+    }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer)
+    this.timer = null
+  }
+
+  getTimeViewLeft() {
+    const currentDate = new Date()
+    const hours = currentDate.getHours()
+    const mins = currentDate.getMinutes()
+    let left = (hours * 4 + mins / 15) * 15
+    //  TODO: 更新计算规则
+    if (hours < 23) {
+      left = left - 20
+    } else if (hours >= 23) {
+      left = left - 40
+    }
+    return left
   }
 
   render() {
     // eslint-disable-next-line no-console
-    const { schedulerData, nonAgendaCellHeaderTemplateResolver } = this.props
+    const {
+      schedulerData,
+      nonAgendaCellHeaderTemplateResolver,
+      showCurrentTime
+    } = this.props
+    console.log(showCurrentTime)
     const { headers, cellUnit, config, localeMoment } = schedulerData
     let headerHeight = schedulerData.getTableHeaderHeight()
     let cellWidth = schedulerData.getContentCellWidth()
     let minuteStepsInHour = schedulerData.getMinuteStepsInHour()
-
+    const currentTime = new Date()
+    const currentMoment = localeMoment(currentTime)
     let headerList = []
-    let style = {}
+    let style = { visibility: 'hidden' }
+    const currentHour = currentTime.getHours()
+    const currentMin = currentTime.getMinutes()
     if (cellUnit === CellUnits.Hour) {
       headers.forEach((item, index) => {
         if (index % minuteStepsInHour === 0) {
@@ -50,9 +102,20 @@ class HeaderView extends React.Component {
               style
             )
           } else {
-            const pList = pFormattedList.map((item, index) => (
-              <div key={index}>{item}</div>
-            ))
+            let pList = pFormattedList.map((item, index) => {
+              return <div key={index}>{item}</div>
+            })
+            if (showCurrentTime) {
+              if (index === currentHour * 4) {
+                style['visibility'] = 'hidden'
+              } else if (
+                (currentMin < 15 && index === (currentHour - 1) * 4) ||
+                (currentMin > 45 && index === (currentHour + 1) * 4)
+              ) {
+                style['visibility'] = 'hidden'
+              }
+            }
+
             element = (
               <th key={item.time} className="header3-text" style={style}>
                 <div>{pList}</div>
@@ -105,13 +168,30 @@ class HeaderView extends React.Component {
         )
       })
     }
+    const { left } = this.state
 
     return (
-      <table className="scheduler-bg-table">
-        <thead>
-          <tr style={{ height: headerHeight }}>{headerList}</tr>
-        </thead>
-      </table>
+      <div style={{ position: 'relative' }}>
+        <table className="scheduler-bg-table">
+          <thead>
+            <tr style={{ height: headerHeight }}>{headerList}</tr>
+          </thead>
+        </table>
+        {showCurrentTime && (
+          <div
+            className="header3-text"
+            style={{
+              position: 'absolute',
+              top: 0,
+              lineHeight: '40px',
+              left: left,
+              color: 'red'
+            }}
+          >
+            {currentMoment.format('HH:mm')}
+          </div>
+        )}
+      </div>
     )
   }
 }
@@ -120,7 +200,8 @@ export default HeaderView
 
 HeaderView.propTypes = {
   schedulerData: PropTypes.object.isRequired,
-  nonAgendaCellHeaderTemplateResolver: PropTypes.func
+  nonAgendaCellHeaderTemplateResolver: PropTypes.func,
+  showCurrentTime: PropTypes.bool
 }
 
 // function TimeLineView({ schedulerData }) {

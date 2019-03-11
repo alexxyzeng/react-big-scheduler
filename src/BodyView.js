@@ -3,6 +3,7 @@ import { PropTypes } from 'prop-types'
 import { ViewTypes } from './index'
 
 import BlankBodyView from './BlankBodyView'
+import CurrentTimeView from './CurrentTimeView'
 
 class BodyView extends Component {
   constructor(props) {
@@ -16,7 +17,8 @@ class BodyView extends Component {
     schedulerData: PropTypes.object.isRequired,
     schedulerWidth: PropTypes.number.isRequired,
     extraBlankCount: PropTypes.number,
-    cellHeight: PropTypes.number
+    cellHeight: PropTypes.number,
+    viewType: PropTypes.number
   }
 
   render() {
@@ -27,7 +29,6 @@ class BodyView extends Component {
       cellHeight,
       viewType
     } = this.props
-    console.log(viewType, '--- view type')
     const { renderData, headers, config, behaviors } = schedulerData
 
     let cellWidth = schedulerData.getContentCellWidth()
@@ -73,7 +74,6 @@ class BodyView extends Component {
 
     const renderDataLength = renderData.length
     const blankCellWidth = cellWidth * 4
-
     return (
       <div className="scheduler-bg">
         <table
@@ -86,6 +86,7 @@ class BodyView extends Component {
         </table>
         {/* TODO: 计算所需的Col数量 */}
         <BlankBodyView
+          startDate={schedulerData.startDate}
           rowCount={extraBlankCount}
           colCount={23}
           cellWidth={blankCellWidth}

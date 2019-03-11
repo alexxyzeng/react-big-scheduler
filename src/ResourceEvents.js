@@ -201,7 +201,6 @@ class ResourceEvents extends PureComponent {
   }
 
   render() {
-    console.log('render res events')
     // TODO: 研究如何减少渲染
     const {
       resourceEvents,
@@ -259,7 +258,7 @@ class ResourceEvents extends PureComponent {
               evt.span * cellWidth - (index > 0 ? 5 : 6) > 0
                 ? evt.span * cellWidth - (index > 0 ? 5 : 6)
                 : 0
-            //  TODO: 计算有冲突时的top值
+            //  计算有冲突时的top值
             const hasConflict = evt.eventItem.hasConflict
             const rowHeight = hasConflict
               ? config.eventItemLineHeight / 2

@@ -189,13 +189,13 @@ const DemoData = {
     },
     {
       id: 10,
-      start: '2017-12-19 17:30:00',
-      end: '2017-12-19 23:30:00',
+      start: '2019-03-01 00:00:00',
+      end: '2019-03-01 13:00:00',
       resourceId: 'r1',
       title: 'R1 has recurring tasks every week on Tuesday, Friday',
       rrule: 'FREQ=WEEKLY;DTSTART=20171219T013000Z;BYDAY=TU,FR',
       bgColor: '#f759ab',
-      hasConflict: true
+      hasConflict: false
     },
     {
       id: 11,

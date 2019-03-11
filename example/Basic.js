@@ -33,7 +33,7 @@ class Basic extends Component {
 
     //let schedulerData = new SchedulerData(new moment("2017-12-18").format(DATE_FORMAT), ViewTypes.Week);
     let schedulerData = new SchedulerData(
-      '2019-03-01',
+      '2019-03-11',
       ViewTypes.Day,
       false,
       false,

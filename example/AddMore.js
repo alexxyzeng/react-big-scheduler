@@ -28,7 +28,6 @@ class AddMore extends Component {
       }
     )
     schedulerData.localeMoment.locale('en')
-    //  TODO: 增加左侧菜单自定义
     schedulerData.setResources(DemoData.resources)
     schedulerData.setEvents(DemoData.events)
     this.state = {

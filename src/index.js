@@ -18,6 +18,7 @@ import DnDContext from './DnDContext'
 import ResourceListView from './ResourceListView'
 import TimeLineView from './TimeLineView'
 import BodyView from './BodyView'
+import CurrentTimeView from './CurrentTimeView'
 import ResourceEvents from './ResourceEvents'
 import AgendaView from './AgendaView'
 import AddMorePopover from './AddMorePopover'
@@ -85,6 +86,7 @@ class Scheduler extends Component {
 
   componentDidMount(props, state) {
     this.resolveScrollbarSize()
+    // this.scroll
   }
 
   componentDidUpdate(props, state) {
@@ -440,15 +442,17 @@ class Scheduler extends Component {
       resourceScrollbarHeight === 0 ? contentScrollbarHeight : 0
     let contentPaddingBottom =
       contentScrollbarHeight === 0 ? resourceScrollbarHeight : 0
+    const overflowYStyle = extraBlankCount >= 1 ? 'hidden' : 'auto'
     let schedulerContentStyle = {
-      overflow: 'auto',
+      overflowX: 'auto',
+      overflowY: overflowYStyle,
       margin: '0px',
       position: 'relative',
       paddingBottom: contentPaddingBottom
     }
     let resourceContentStyle = {
       overflowX: 'auto',
-      overflowY: 'auto',
+      overflowY: overflowYStyle,
       width: resourceTableWidth + resourceScrollbarWidth - 2,
       margin: `0px -${contentScrollbarWidth}px 0px 0px`
     }
@@ -465,6 +469,8 @@ class Scheduler extends Component {
     let resourceName = schedulerData.isEventPerspective
       ? config.taskName
       : config.resourceName
+
+    const shouldShowCurrentTime = schedulerData.shouldShowCurrentTime()
     tbodyContent = (
       // 左侧列表需要增加功能
       <tr>
@@ -510,7 +516,11 @@ class Scheduler extends Component {
         <td>
           <div
             className="scheduler-view"
-            style={{ width: schedulerContainerWidth, verticalAlign: 'top' }}
+            style={{
+              position: 'relative',
+              width: schedulerContainerWidth,
+              verticalAlign: 'top'
+            }}
           >
             <div
               style={{
@@ -532,6 +542,7 @@ class Scheduler extends Component {
               >
                 <div
                   style={{
+                    position: 'relative',
                     paddingRight: `${contentScrollbarWidth}px`,
                     width: schedulerWidth + contentScrollbarWidth
                   }}
@@ -541,6 +552,7 @@ class Scheduler extends Component {
                     nonAgendaCellHeaderTemplateResolver={
                       nonAgendaCellHeaderTemplateResolver
                     }
+                    showCurrentTime={shouldShowCurrentTime}
                   />
                 </div>
               </div>
@@ -553,12 +565,6 @@ class Scheduler extends Component {
               onScroll={this.onSchedulerContentScroll}
             >
               <div style={{ width: schedulerWidth, height: contentHeight }}>
-                {/* 会议信息 */}
-                <div className="scheduler-content">
-                  <table className="scheduler-content-table">
-                    <tbody>{resourceEventsList}</tbody>
-                  </table>
-                </div>
                 {/* 背景 */}
                 <BodyView
                   schedulerWidth={schedulerWidth}
@@ -567,6 +573,17 @@ class Scheduler extends Component {
                   cellHeight={cellHeight}
                   viewType={schedulerData.viewType}
                 />
+                {/* 会议信息 */}
+                <div className="scheduler-content">
+                  <table className="scheduler-content-table">
+                    <tbody>{resourceEventsList}</tbody>
+                  </table>
+                  {shouldShowCurrentTime && (
+                    <CurrentTimeView
+                      height={height - config.tableHeaderHeight}
+                    />
+                  )}
+                </div>
               </div>
             </div>
           </div>

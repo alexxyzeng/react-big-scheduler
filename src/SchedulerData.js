@@ -1033,6 +1033,7 @@ export default class SchedulerData {
           ? this.getCellMaxEvents()
           : maxRowsCount
       //  更新rowHeight 计算方法，判断每行是否有重复会议
+      //  FIXME: 这里更新的rowHeight有bug
       const { slotId } = resourceEvents
       const hasConflict = this.events.some(event => event.resourceId === slotId && event.hasConflict)
       const { eventItemLineHeight, checkConflict, creatable, nonAgendaSlotMinHeight } = this.config
@@ -1076,5 +1077,9 @@ export default class SchedulerData {
     // }
     console.log(this.viewType === ViewTypes.Day)
     console.log(this.startDate)
+  }
+
+  shouldShowCurrentTime() {
+    return this.viewType === ViewTypes.Day && this.startDate === moment(new Date).format(DATE_FORMAT)
   }
 }

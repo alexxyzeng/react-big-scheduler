@@ -116,8 +116,9 @@ table.scheduler-table td {
 }
 
 table.resource-table td,
-table.resource-table th,
-table.scheduler-bg-table th {
+table.resource-table th
+/* table.scheduler-bg-table th { */
+ {
   border-right: 1px solid #e3f0fb;
 }
 
